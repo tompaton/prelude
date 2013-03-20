@@ -87,6 +87,9 @@
 (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
 (global-set-key (kbd "M-]") 'mc/mark-next-like-this)
 (global-set-key (kbd "M-[") 'mc/mark-previous-like-this)
+(global-set-key (kbd "H-SPC") 'set-rectangular-region-anchor)
+
+(add-to-list 'mc/cmds-to-run-for-all 'python-backspace)
 
 ;; Comment/uncomment block
 (global-set-key (kbd "C-c c") 'comment-or-uncomment-region)
