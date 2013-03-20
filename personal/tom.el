@@ -2,6 +2,19 @@
 
 (add-to-list 'load-path "~/.emacs.d/personal/lib/")
 
+;; install packages
+(prelude-ensure-module-deps '(bm
+                              dsvn
+                              expand-region
+                              highlight-symbol
+                              hlinum
+                              jump
+                              jump-char
+                              multiple-cursors
+                              smooth-scrolling
+                              wgrep
+                              wgrep-ack))
+
 ;; highlight everything in whitespace-mode except long lines
 (setq whitespace-style (quote
                         (spaces tabs trailing newline space-before-tab indentation empty space-after-tab space-mark tab-mark newline-mark)))
@@ -122,12 +135,11 @@
 (defun toggle-window-dedicated ()
   "Toggle whether the current active window is dedicated or not"
   (interactive)
-  (message 
+  (message
    (if (let (window (get-buffer-window (current-buffer)))
-         (set-window-dedicated-p window 
+         (set-window-dedicated-p window
                                  (not (window-dedicated-p window))))
        "Window '%s' is dedicated"
      "Window '%s' is normal")
    (current-buffer)))
 (global-set-key [pause] 'toggle-window-dedicated)
-
