@@ -12,6 +12,7 @@
                               jump-char
                               multiple-cursors
                               smooth-scrolling
+                              ack-and-a-half
                               wgrep
                               wgrep-ack))
 
@@ -80,6 +81,7 @@
 (global-set-key (kbd "M-h") 'highlight-symbol-at-point)
 
 ;; expand selection
+(require 'expand-region)
 (global-set-key (kbd "C-=") 'er/expand-region)
 
 ;; multiple cursors
@@ -147,3 +149,14 @@
      "Window '%s' is normal")
    (current-buffer)))
 (global-set-key [pause] 'toggle-window-dedicated)
+
+;; editable grep/ack buffers (C-c C-p)
+(require 'wgrep)
+(require 'wgrep-ack)
+
+;; load config from local/ folder based on current machine name
+(let ((local-el (concat "~/.emacs.d/personal/local/" system-name ".el")))
+  (when (file-exists-p local-el)
+    (message "Loading local configuration files in %s..." local-el)
+    (load-file local-el)))
+

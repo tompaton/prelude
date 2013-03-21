@@ -1,2 +1,2 @@
-;; start with 2 panes
+;; start with 2 panes for widescreen monitor
 (split-window-horizontally)
