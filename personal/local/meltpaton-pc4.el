@@ -1,7 +1,5 @@
 ;;; xplan/cygwin specific customisations
 
-(add-to-list 'load-path "~/.emacs.d/personal/cygwin/")
-
 (autoload 'svn-status "dsvn" "Run `svn status'." t)
 (autoload 'svn-update "dsvn" "Run `svn update'." t)
 
@@ -65,3 +63,9 @@
   nil
   'which-function)
 
+;; one frame per monitor
+(make-frame)
+(make-frame)
+
+;; menu-bar-on
+(menu-bar-mode)
