@@ -103,6 +103,31 @@
 (global-set-key (kbd "C-.") [?\C-u    ?4 ?\M-x ?i ?n ?d ?e ?n ?t ?- ?r ?i ?g ?i ?d ?l ?y return])
 (global-set-key (kbd "C-,") [?\C-u ?- ?4 ?\M-x ?i ?n ?d ?e ?n ?t ?- ?r ?i ?g ?i ?d ?l ?y return])
 
+;; toggle quotes
+(defun toggle-quotes ()
+  "Toggle single quoted string to double or vice versa, and
+  flip the internal quotes as well.  Best to run on the first
+  character of the string."
+  (interactive)
+  (re-search-backward "[\"']")
+  (let* ((start (point))
+         (old-c (char-after start))
+         new-c)
+    (setq new-c 
+          (case old-c
+            (?\" "'")
+            (?\' "\"")))
+    (setq old-c (char-to-string old-c))
+    (delete-char 1)
+    (insert new-c)
+    (re-search-forward old-c)
+    (backward-char 1)
+    (let ((end (point)))
+      (delete-char 1)
+      (insert new-c)
+      (replace-string new-c old-c nil (1+ start) end))))
+(global-set-key (kbd "C-c '") 'toggle-quotes)
+
 ;; helm
 (require 'helm-files)
 (setq helm-idle-delay 0.1)
