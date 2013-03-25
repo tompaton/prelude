@@ -51,17 +51,17 @@
 ;; 			    (match-string 1 path))))))
 ;;   'ruby-add-log-current-method)
 
-(require 'jump)
-(defjump
-  xplan-find-file
-  (
-   ("/supersolver/\\2" . "src\\\\py\\\\xpt\\\\supersolver\\\\protocol.py")
-   ("callJSON(['\"]\\1\\.\\2['\"]" . "src\\\\py\\\\xpt\\\\\\1\\\\rpc.py")
-   )
-  "c:\\xplanbase\\version\\2.99.999\\"
-  "Follow a logical link from one part of the source to another."
-  nil
-  'which-function)
+;; (require 'jump)
+;; (defjump
+;;   xplan-find-file
+;;   (
+;;    ("/supersolver/\\2" . "src\\\\py\\\\xpt\\\\supersolver\\\\protocol.py")
+;;    ("callJSON(['\"]\\1\\.\\2['\"]" . "src\\\\py\\\\xpt\\\\\\1\\\\rpc.py")
+;;    )
+;;   "c:\\xplanbase\\version\\2.99.999\\"
+;;   "Follow a logical link from one part of the source to another."
+;;   nil
+;;   'which-function)
 
 ;; one frame per monitor
 (make-frame)
@@ -69,3 +69,31 @@
 
 ;; menu-bar-on
 (menu-bar-mode)
+
+;; project specific navigation
+(defun xplan-jump ()
+     "Jump to the appropriate source file/line based on the current line
+
+Follow python imports, urls to request handlers, rpc calls etc."
+     (interactive)
+     ;; TODO: pick up current path
+     (let ((xplan-base "c:\\xplanbase\\version\\2.99.999\\")
+           (cur_line (thing-at-point 'line)))
+       (cond
+        ;; RPC calls
+        ((string-match "callJSON(['\\\"]\\(.+\\)\\.\\(.+\\)['\\\"]" cur_line)
+         (let (source
+               (module (match-string 1 cur_line))
+               (method (concat "rpc_" (match-string 2 cur_line))))
+           ;; rr, iqm1, iqm2 are in insurance subfolder
+           (cond ((string-match "\\_<rr\\|rr_sg\\|rr_gb\\|iqm1\\|iqm2\\_>" module)
+                  (setq module (concat "insurance\\" module))))
+           (setq source (format "src\\py\\xpt\\%s\\rpc.py" module))
+           (message "xplan-jump: callJSON --> %s :: %s" source method)
+           (find-file (concat xplan-base source))
+           (goto-char (point-min))
+           (search-forward (concat "def " method "("))
+           (recenter-top-bottom)))
+        (t
+         (message "xplan-jump: not found")))))
+(global-set-key (kbd "C-c j") 'xplan-jump)
