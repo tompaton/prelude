@@ -75,10 +75,14 @@
 
 ;; highlight symbol under point and alt-left/right to navigate between references
 (setq highlight-symbol-idle-delay 0.2)
-(highlight-symbol-mode t)
 (global-set-key (kbd "<M-right>") 'highlight-symbol-next)
 (global-set-key (kbd "<M-left>") 'highlight-symbol-prev)
 (global-set-key (kbd "M-h") 'highlight-symbol-at-point)
+
+(defun my-prog-mode-defaults ()
+  "Default coding hook, useful with any programming language."
+  (highlight-symbol-mode t))
+(add-hook 'prelude-prog-mode-hook 'my-prog-mode-defaults t)
 
 ;; expand selection
 (require 'expand-region)
