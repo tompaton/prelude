@@ -14,7 +14,9 @@
                               smooth-scrolling
                               ack-and-a-half
                               wgrep
-                              wgrep-ack))
+                              wgrep-ack
+                              browse-kill-ring
+                              kill-ring-search))
 
 ;; highlight everything in whitespace-mode except long lines
 (setq whitespace-style (quote
@@ -216,3 +218,10 @@
     (message "Loading local configuration files in %s..." local-el)
     (load-file local-el)))
 
+;; browse & search kill ring
+(require 'browse-kill-ring)
+(global-set-key (kbd "C-c y") 'browse-kill-ring)
+(autoload 'kill-ring-search "kill-ring-search"
+  "Search the kill ring in the minibuffer."
+  (interactive))
+(global-set-key "\M-\C-y" 'kill-ring-search)
