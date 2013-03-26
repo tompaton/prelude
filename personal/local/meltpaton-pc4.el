@@ -71,29 +71,97 @@
 (menu-bar-mode)
 
 ;; project specific navigation
-(defun xplan-jump ()
+(defun xplan/jump-file (path source)
+  "Jump to the given source file.
+
+Normalizes the source filename and adds the xplan base folder and the specified path.
+Returns the normalized filename (minus xplan base).
+"
+  ;; TODO: pick up current path
+  (let ((xplan-base "c:\\xplanbase\\version\\2.99.999\\")
+        ;; normalize filename
+        (normalized (with-temp-buffer
+                   (insert source)
+                   ;; convert list of path components to a proper path
+                   (goto-char (point-min))
+                   (while (re-search-forward "['\"[:blank:]]+" nil t)
+                     (replace-match "" nil t))
+                   (goto-char (point-min))
+                   (while (search-forward "," nil t)
+                     (replace-match "\\" nil t))
+                   ;; fix backslashes
+                   (goto-char (point-min))
+                   (while (search-forward "/" nil t)
+                     (replace-match "\\" nil t))
+                   (buffer-string))))
+    (find-file (concat xplan-base path normalized))
+    ;; return resulting filename
+    (concat path normalized)))
+
+(defun xplan/jump-method (method)
+  "Jump to top level python function in current buffer"
+  (goto-char (point-min))
+  ;; only match at col 1
+  (re-search-forward (concat "^def " method "("))
+  (recenter-top-bottom)
+  ;; return method
+  method)
+
+(defun xplan/jump ()
      "Jump to the appropriate source file/line based on the current line
 
 Follow python imports, urls to request handlers, rpc calls etc."
      (interactive)
-     ;; TODO: pick up current path
-     (let ((xplan-base "c:\\xplanbase\\version\\2.99.999\\")
-           (cur_line (thing-at-point 'line)))
+     (let ((cur_line (thing-at-point 'line)))
        (cond
+
         ;; RPC calls
         ((string-match "callJSON(['\\\"]\\(.+\\)\\.\\(.+\\)['\\\"]" cur_line)
-         (let (source
-               (module (match-string 1 cur_line))
+         (let ((module (match-string 1 cur_line))
                (method (concat "rpc_" (match-string 2 cur_line))))
            ;; rr, iqm1, iqm2 are in insurance subfolder
            (cond ((string-match "\\_<rr\\|rr_sg\\|rr_gb\\|iqm1\\|iqm2\\_>" module)
                   (setq module (concat "insurance\\" module))))
-           (setq source (format "src\\py\\xpt\\%s\\rpc.py" module))
-           (message "xplan-jump: callJSON --> %s :: %s" source method)
-           (find-file (concat xplan-base source))
-           (goto-char (point-min))
-           (search-forward (concat "def " method "("))
-           (recenter-top-bottom)))
+           (message "xplan/jump: callJSON --> %s :: %s"
+                    (xplan/jump-file "src\\py\\xpt\\" (concat module "\\rpc.py"))
+                    (xplan/jump-method method))))
+
+        ;; html template, / separated path
+        ((string-match "\\(get_popup_template\\|get_full_page_popup_template\\|Template\\)(['\"]\\(.+\\)['\"]" cur_line)
+         (message "xplan/jump: get_popup_template --> %s"
+                  (xplan/jump-file "data\\ihtml\\" (match-string 2 cur_line))))
+
+        ;; html template, path in list/tuple
+        ((string-match "\\_<\\(get\\w*TPO\\|get_.+_template\\|Template\\)(\\[\\([^]]+\\)\\]" cur_line)
+         (message "xplan/jump: Template --> %s"
+                  (xplan/jump-file "data\\ihtml\\" (match-string 2 cur_line))))
+
+        ;; <:include html_template:>
+        ((string-match "<:include \\(.+\\):>" cur_line)
+         (message "xplan/jump: include --> %s"
+                  (xplan/jump-file "data\\ihtml\\" (match-string 1 cur_line))))
+
+        ;; $ADD_JAVASCRIPT
+        ((string-match "$ADD_JAVASCRIPT(['\"]\\(.+\\)['\"])" cur_line)
+         (message "xplan/jump: ADD_JAVASCRIPT --> %s"
+                  (xplan/jump-file "data\\wwwroot\\js\\" (match-string 1 cur_line))))
+
+        ;; $ADD_CSS
+        ((string-match "$ADD_CSS(['\"]\\(.+\\)['\"])" cur_line)
+         (message "xplan/jump: ADD_CSS --> %s"
+                  (xplan/jump-file "data\\wwwroot\\css\\" (match-string 1 cur_line))))
+
+        ;; url --> protocol req handler
+        ((string-match "/\\(iqm\\+/rr\\|supersolver\\)/\\([[:word:]_]+\\)" cur_line)
+         (let ((module (match-string 1 cur_line))
+               (method (concat "req_" (match-string 2 cur_line))))
+           ;; rr, iqm1, iqm2 are in insurance subfolder
+           (cond ((string-match "\\(\\_<rr\\|rr_sg\\|rr_gb\\|iqm1\\|iqm2\\_>\\)" module)
+                  (setq module (concat "insurance\\" (match-string 1 module)))))
+           (message "xplan/jump: url --> %s :: %s"
+                    (xplan/jump-file "src\\py\\xpt\\" (concat module "\\protocol.py"))
+                    (xplan/jump-method method))))
+
         (t
-         (message "xplan-jump: not found")))))
-(global-set-key (kbd "C-c j") 'xplan-jump)
+         (message "xplan/jump: match not found")))))
+(global-set-key (kbd "C-c j") 'xplan/jump)
