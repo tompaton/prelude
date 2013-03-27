@@ -16,7 +16,8 @@
                               wgrep
                               wgrep-ack
                               browse-kill-ring
-                              kill-ring-search))
+                              kill-ring-search
+                              column-marker))
 
 ;; highlight everything in whitespace-mode except long lines
 (setq whitespace-style (quote
