@@ -208,6 +208,10 @@
    (current-buffer)))
 (global-set-key [pause] 'toggle-window-dedicated)
 
+;; .svn support for finding project root
+(require 'ack-and-a-half)
+(add-to-list 'ack-and-a-half-project-root-file-patterns "\\`.svn\\'")
+
 ;; editable grep/ack buffers (C-c C-p)
 (require 'wgrep)
 (require 'wgrep-ack)

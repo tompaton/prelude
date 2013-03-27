@@ -4,8 +4,8 @@
 (autoload 'svn-update "dsvn" "Run `svn update'." t)
 
 ;; cygwin bash as shell
-(setq exec-path (cons "c:/cygwin/bin" exec-path))
-(require 'setup-cygwin)
+;(setq exec-path (cons "c:/cygwin/bin" exec-path))
+;(require 'setup-cygwin)
 
 ;;(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
@@ -20,14 +20,27 @@
 ;;(global-set-key (kbd "C-x f") 'find-file-in-project)
 
 
-;;(add-to-list 'load-path "~/.emacs.d/personal/ack-and-a-half.el")
+;; fix ack-and-a-half so stdin is closed
 
-;; (require 'ack-and-a-half)
-;; ;; Create shorter aliases
-;; (defalias 'ack 'ack-and-a-half)
-;; (defalias 'ack-same 'ack-and-a-half-same)
-;; (defalias 'ack-find-file 'ack-and-a-half-find-file)
-;; (defalias 'ack-find-file-same 'ack-and-a-half-find-file-same)
+(require 'ack-and-a-half)
+(defun ack-and-a-half-run (directory regexp pattern &rest arguments)
+  "Run ack in DIRECTORY with ARGUMENTS."
+  (let ((default-directory (if directory
+                               (file-name-as-directory (expand-file-name directory))
+                             default-directory)))
+    (setq arguments (append ack-and-a-half-arguments
+                            (ack-and-a-half-arguments-from-options regexp)
+                            arguments
+                            (list "--")
+                            (list (shell-quote-argument pattern))
+                            ;; close stdin
+                            (list (concat " < " null-device))
+                            ))
+    (make-local-variable 'compilation-buffer-name-function)
+    (let (compilation-buffer-name-function)
+      (setq compilation-buffer-name-function 'ack-buffer-name)
+      (compilation-start (mapconcat 'identity (nconc (list ack-and-a-half-executable) arguments) " ")
+                         'ack-and-a-half-mode))))
 
 ;; (require 'jump)
 ;; (defjump
