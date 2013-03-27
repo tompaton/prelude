@@ -1,10 +1,11 @@
 ;;; undo unwanted prelude defaults
 
-;; i like arrow keys too
-(setq prelude-guru nil)
+;; problematic key bindings:
+(setq prelude-guru nil)            ; i like arrow keys as well as emacs nav keys
+(global-set-key (kbd "C-v") 'yank) ; C-v for page down is a pain, my fingers want paste
 
-;; C-v for page down is a pain, my fingers want paste
-(global-set-key (kbd "C-v") 'yank)
+;; C-c k prelude-kill-other-buffers is easily mistyped when going for C-x k
+(put 'prelude-kill-other-buffers 'disabled t)
 
 ;; no point hamstringing myself by hiding the menu
 (menu-bar-mode t)
