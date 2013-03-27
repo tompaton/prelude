@@ -20,8 +20,16 @@
 ;;(global-set-key (kbd "C-x f") 'find-file-in-project)
 
 
-;; fix ack-and-a-half so stdin is closed
-
+;; getting ack working in windows
+;; should be able to have a single copy of ack that runs in cmd.exe and cygwin bash
+;; 1) install strawberry perl
+;; 2) set up proxy in cpan
+;;     cpan> o conf http_proxy http://meldevproxy1:80
+;; 3) install ack (have to force as tests don't pass on windows)
+;;     cpan> force install App::Ack
+;; 4) make sure ~/.ackrc is valid (not a cygwin symlink)
+;; 5) can't use cygwin bash as emacs shell
+;; 6) fix ack-and-a-half-run so stdin is closed:
 (require 'ack-and-a-half)
 (defun ack-and-a-half-run (directory regexp pattern &rest arguments)
   "Run ack in DIRECTORY with ARGUMENTS."
