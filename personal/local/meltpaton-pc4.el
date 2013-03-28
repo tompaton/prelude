@@ -12,8 +12,14 @@
 ;;(require 'w32-symlinks)
 ;;(setq w32-symlinks-handle-shortcuts t)
 
-;;(require 'flymake-python-pyflakes)
-;;(add-hook 'python-mode-hook 'flymake-python-pyflakes-load)
+;; getting flake8 working in windows
+;; 1) add C:\Python27\Scripts to PATH
+;; 2) easy_install pip
+;; 3) pip install flake8
+;; 4) config in ~/.flake8
+(require 'flymake-python-pyflakes)
+(add-hook 'python-mode-hook 'flymake-python-pyflakes-load)
+(setq flymake-python-pyflakes-executable "flake8")
 
 ;;(require 'find-file-in-project)
 ;;(setq ffip-project-file ".svn")
