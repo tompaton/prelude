@@ -7,6 +7,13 @@
 ;(setq exec-path (cons "c:/cygwin/bin" exec-path))
 ;(require 'setup-cygwin)
 
+(defun cygwin-shell ()
+  "Run cygwin bash in shell mode."
+  (interactive)
+  (let ((explicit-shell-file-name "C:/cygwin/bin/bash")
+        (explicit-bash-args '("--login" "-i")))
+    (call-interactively 'shell)))
+
 ;;(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
 ;;(require 'w32-symlinks)
@@ -20,11 +27,6 @@
 (require 'flymake-python-pyflakes)
 (add-hook 'python-mode-hook 'flymake-python-pyflakes-load)
 (setq flymake-python-pyflakes-executable "flake8")
-
-;;(require 'find-file-in-project)
-;;(setq ffip-project-file ".svn")
-;;(global-set-key (kbd "C-x f") 'find-file-in-project)
-
 
 ;; getting ack working in windows
 ;; should be able to have a single copy of ack that runs in cmd.exe and cygwin bash
@@ -60,9 +62,14 @@
 (make-frame)
 (make-frame)
 
-;; menu-bar-on
+;; menu-bar-on (make-frame turns it off)
 (menu-bar-mode)
+
+;;(require 'find-file-in-project)
+;;(setq ffip-project-file ".svn")
+;;(global-set-key (kbd "C-x f") 'find-file-in-project)
 
 ;; project specific navigation
 (load "~/.emacs.d/personal/lib/xplan.el")
 (global-set-key (kbd "C-c j") 'xplan/jump)
+
