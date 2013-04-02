@@ -17,12 +17,18 @@
                               wgrep-ack
                               browse-kill-ring
                               kill-ring-search
-                              column-marker))
+                              fill-column-indicator))
 
 ;; highlight everything in whitespace-mode except long lines
 (setq whitespace-style (quote
                         (spaces tabs trailing newline space-before-tab indentation empty space-after-tab space-mark tab-mark newline-mark)))
 (setq indicate-empty-lines t)
+
+;; add a vertical line at column 100
+(require 'fill-column-indicator)
+(define-globalized-minor-mode global-fci-mode fci-mode (lambda () (fci-mode 1)))
+(global-fci-mode 1)
+(setq-default fill-column 100)
 
 ;; quick keys to toggle view
 (global-set-key [f5] 'toggle-truncate-lines)
