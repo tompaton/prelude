@@ -14,7 +14,7 @@
 (disable-theme 'zenburn )
 
 ;; don't truncate trailing whitespace on save as it makes diffs too noisy
-(setq prelude-whitespace nil)
+(setq prelude-clean-whitespace-on-save nil)
 
 ;; don't auto reload (TODO: not working...?)
 (global-auto-revert-mode nil)
