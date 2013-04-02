@@ -217,12 +217,6 @@
 (require 'wgrep)
 (require 'wgrep-ack)
 
-;; load config from local/ folder based on current machine name
-(let ((local-el (concat "~/.emacs.d/personal/local/" system-name ".el")))
-  (when (file-exists-p local-el)
-    (message "Loading local configuration files in %s..." local-el)
-    (load-file local-el)))
-
 ;; browse & search kill ring
 (require 'browse-kill-ring)
 (global-set-key (kbd "C-c y") 'browse-kill-ring)
@@ -230,3 +224,25 @@
   "Search the kill ring in the minibuffer."
   (interactive))
 (global-set-key "\M-\C-y" 'kill-ring-search)
+
+;; cycle buffer through major modes I use that may not be detected
+;; correctly by emacs
+(defun cycle-modes (modes)
+  (let ((next-mode (cadr (memq major-mode modes))))
+    (unless next-mode
+      (setq next-mode (car modes)))
+    (funcall next-mode)))
+(global-set-key (kbd "<f9>") #'(lambda ()
+                                 (interactive)
+                                 (cycle-modes '(python-mode
+                                                html-mode
+                                                javascript-mode
+                                                fundamental-mode))))
+
+
+;; load config from local/ folder based on current machine name
+(let ((local-el (concat "~/.emacs.d/personal/local/" system-name ".el")))
+  (when (file-exists-p local-el)
+    (message "Loading local configuration files in %s..." local-el)
+    (load-file local-el)))
+
