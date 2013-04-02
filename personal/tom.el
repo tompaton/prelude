@@ -40,23 +40,6 @@
 ;; indent after new line
 (global-set-key (kbd "RET") 'newline-and-indent)
 
-;; insert new line above/below
-(defun open-line-below ()
-  (interactive)
-  (end-of-line)
-  (newline)
-  (indent-for-tab-command))
-
-(defun open-line-above ()
-  (interactive)
-  (beginning-of-line)
-  (newline)
-  (forward-line -1)
-  (indent-for-tab-command))
-
-(global-set-key (kbd "<C-return>") 'open-line-below)
-(global-set-key (kbd "<C-S-return>") 'open-line-above)
-
 ;; remove extra blanks when joining lines
 (defun kill-and-join-forward (&optional arg)
   (interactive "P")
