@@ -21,7 +21,23 @@
 
 ;; highlight everything in whitespace-mode except long lines
 (setq whitespace-style (quote
-                        (spaces tabs trailing newline space-before-tab indentation empty space-after-tab space-mark tab-mark newline-mark)))
+                        (face spaces tabs trailing newline space-before-tab indentation empty space-after-tab space-mark tab-mark newline-mark)))
+;; no yellow background on spaces
+(set-face-attribute 'whitespace-space nil
+                    :background nil)
+;; subtler trailing space background
+(set-face-attribute 'whitespace-trailing nil
+                    :foreground "#F88"
+                    :background nil
+                    :weight 'light)
+;; nicer tab & cr indicators
+(setq whitespace-display-mappings
+      ;; all numbers are Unicode codepoint in decimal
+      '(
+        (space-mark   32 [183] [46])      ; 32 SPACE 「 」, 183 MIDDLE DOT 「·」, 46 FULL STOP 「.」
+        (newline-mark 10 [182 10])        ; 10 LINE FEED
+        (tab-mark      9 [8594 9] [92 9]) ; 9 TAB, 9655 WHITE RIGHT-POINTING TRIANGLE 「▷」
+        ))
 (setq indicate-empty-lines t)
 
 ;; add a vertical line at column 100
