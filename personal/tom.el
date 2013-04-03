@@ -45,6 +45,7 @@
 (define-globalized-minor-mode global-fci-mode fci-mode (lambda () (fci-mode 1)))
 (global-fci-mode 1)
 (setq-default fill-column 100)
+(setq-default fci-rule-color "#dddddd")
 
 ;; quick keys to toggle view
 (global-set-key [f5] 'toggle-truncate-lines)
