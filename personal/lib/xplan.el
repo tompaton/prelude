@@ -21,19 +21,29 @@ Returns the normalized filename (minus xplan base).
                    (while (search-forward "/" nil t)
                      (replace-match "\\" nil t))
                    (buffer-string))))
-    (find-file (concat xplan-base path normalized))
+    (let ((file (concat xplan-base path normalized)))
+      (if (file-exists-p file)
+          (find-file file)
+        ;; indicate file doesn't exist in resulting message
+        (setq normalized (concat normalized " (not found)"))))
     ;; return resulting filename
     (concat path normalized)))
 
 (defun xplan/jump-method (method)
   "Jump to top level python function in current buffer"
-  (goto-char (point-min))
-  (if (ignore-errors
-        ;; only match at col 1
-        (re-search-forward (concat "^def " method "(")))
-      (recenter-top-bottom))
-  ;; return method
-  method)
+  (let ((pos (point)))
+    (goto-char (point-min))
+    (if (ignore-errors
+          ;; only match at col 1
+          (re-search-forward (concat "^def " method "(")))
+        (recenter-top-bottom)
+      (progn
+        ;; restore cursor
+        (goto-char pos)
+        ;; indicate method doesn't exist in resulting message
+        (setq method (concat method " (not found)"))))
+    ;; return method
+    method))
 
 (defun xplan/jump ()
      "Jump to the appropriate source file/line based on the current line
