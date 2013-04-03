@@ -28,9 +28,10 @@ Returns the normalized filename (minus xplan base).
 (defun xplan/jump-method (method)
   "Jump to top level python function in current buffer"
   (goto-char (point-min))
-  ;; only match at col 1
-  (re-search-forward (concat "^def " method "("))
-  (recenter-top-bottom)
+  (if (ignore-errors
+        ;; only match at col 1
+        (re-search-forward (concat "^def " method "(")))
+      (recenter-top-bottom))
   ;; return method
   method)
 
@@ -45,12 +46,17 @@ Follow python imports, urls to request handlers, rpc calls etc."
         ;; RPC calls
         ((string-match "callJSON(['\\\"]\\(.+\\)\\.\\(.+\\)['\\\"]" cur_line)
          (let ((module (match-string 1 cur_line))
+               (file "rpc.py")
                (method (concat "rpc_" (match-string 2 cur_line))))
            ;; rr, iqm1, iqm2 are in insurance subfolder
            (cond ((string-match "\\_<rr\\|rr_sg\\|rr_gb\\|iqm1\\|iqm2\\_>" module)
                   (setq module (concat "insurance\\" module))))
+           ;; sysadmin uses rpc for each module
+           (cond ((string-match "\\(sysadmin\\)\\.\\(.+\\)" module)
+                  (setq file (concat "rpc_" (match-string 2 module) ".py"))
+                  (setq module (match-string 1 module))))
            (message "xplan/jump: callJSON --> %s :: %s"
-                    (xplan/jump-file "src\\py\\xpt\\" (concat module "\\rpc.py"))
+                    (xplan/jump-file "src\\py\\xpt\\" (concat module "\\" file))
                     (xplan/jump-method method))))
 
         ;; html template, / separated path
@@ -59,7 +65,7 @@ Follow python imports, urls to request handlers, rpc calls etc."
                   (xplan/jump-file "data\\ihtml\\" (match-string 2 cur_line))))
 
         ;; html template, path in list/tuple
-        ((string-match "\\_<\\(get\\w*TPO\\|get_.+_template\\|Template\\)(\\[\\([^]]+\\)\\]" cur_line)
+        ((string-match "\\_<\\(get\\w*TPO\\|get_.+_template\\|Template\\|getMainFrame\\)(\\[\\([^]]+\\)\\]" cur_line)
          (message "xplan/jump: Template --> %s"
                   (xplan/jump-file "data\\ihtml\\" (match-string 2 cur_line))))
 
@@ -79,14 +85,22 @@ Follow python imports, urls to request handlers, rpc calls etc."
                   (xplan/jump-file "data\\wwwroot\\css\\" (match-string 1 cur_line))))
 
         ;; url --> protocol req handler
+        ((string-match "/\\(sysadmin\\)/\\(supersolver\\)/\\([[:word:]_]+\\)" cur_line)
+         (let ((module (match-string 1 cur_line))
+               (file (concat "req_" (match-string 2 cur_line) ".py"))
+               (method (concat "req_" (match-string 3 cur_line))))
+           (message "xplan/jump: url --> %s :: %s"
+                    (xplan/jump-file "src\\py\\xpt\\" (concat module "\\" file))
+                    (xplan/jump-method method))))
         ((string-match "/\\(iqm\\+/rr\\|supersolver\\)/\\([[:word:]_]+\\)" cur_line)
          (let ((module (match-string 1 cur_line))
+               (file "protocol.py")
                (method (concat "req_" (match-string 2 cur_line))))
            ;; rr, iqm1, iqm2 are in insurance subfolder
            (cond ((string-match "\\(\\_<rr\\|rr_sg\\|rr_gb\\|iqm1\\|iqm2\\_>\\)" module)
                   (setq module (concat "insurance\\" (match-string 1 module)))))
            (message "xplan/jump: url --> %s :: %s"
-                    (xplan/jump-file "src\\py\\xpt\\" (concat module "\\protocol.py"))
+                    (xplan/jump-file "src\\py\\xpt\\" (concat module "\\" file))
                     (xplan/jump-method method))))
 
         (t
