@@ -4,7 +4,8 @@
 (autoload 'svn-update "dsvn" "Run `svn update'." t)
 
 ;; cygwin bash as shell
-;(setq exec-path (cons "c:/cygwin/bin" exec-path))
+;; need to add CYGWIN=nodosfilewarning to Environment Variables
+(setq exec-path (cons "c:/cygwin/bin" exec-path))
 ;(require 'setup-cygwin)
 
 (defun cygwin-shell ()
