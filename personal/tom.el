@@ -244,6 +244,8 @@
                                                 javascript-mode
                                                 fundamental-mode))))
 
+;; html should use 4 spaces to indent
+(setq sgml-basic-offset 4)
 
 ;; load config from local/ folder based on current machine name
 (let ((local-el (concat "~/.emacs.d/personal/local/" system-name ".el")))
