@@ -88,6 +88,11 @@ Follow python imports, urls to request handlers, rpc calls etc."
         ((string-match "$ADD_JAVASCRIPT(['\"]\\(.+\\)['\"])" cur_line)
          (message "xplan/jump: ADD_JAVASCRIPT --> %s"
                   (xplan/jump-file "data\\wwwroot\\js\\" (match-string 1 cur_line))))
+        ;; Dependency.addJS
+        ((string-match "Dependency.addJS(['\"]\\(.+\\)['\"])" cur_line)
+         (message "xplan/jump: Dependency.addJS --> %s"
+                  (xplan/jump-file "data\\wwwroot\\js\\"
+                                   (concat (match-string 1 cur_line) ".js"))))
 
         ;; $ADD_CSS
         ((string-match "$ADD_CSS(['\"]\\(.+\\)['\"])" cur_line)
