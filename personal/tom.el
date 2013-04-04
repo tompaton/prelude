@@ -20,6 +20,7 @@
                               fill-column-indicator))
 
 ;; highlight everything in whitespace-mode except long lines
+(require 'whitespace)
 (setq whitespace-style (quote
                         (face spaces tabs trailing newline space-before-tab indentation empty space-after-tab space-mark tab-mark newline-mark)))
 ;; no yellow background on spaces
@@ -46,6 +47,11 @@
 (global-fci-mode 1)
 (setq-default fill-column 100)
 (setq-default fci-rule-color "#dddddd")
+
+;; tone down flymake errors and warnings
+(require 'flymake)
+(set-face-attribute 'flymake-errline nil
+                    :background "#ffe8e8")
 
 ;; quick keys to toggle view
 (global-set-key [f5] 'toggle-truncate-lines)
