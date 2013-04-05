@@ -17,6 +17,9 @@
 
 ;;(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
+;; for pdb in cygwin-shell
+(setenv "PYTHONUNBUFFERED" "x")
+
 ;;(require 'w32-symlinks)
 ;;(setq w32-symlinks-handle-shortcuts t)
 
