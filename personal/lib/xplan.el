@@ -1,4 +1,4 @@
-(defun xplan/jump-file (path source)
+(defun xplan/jump-file (path source &optional CREATE)
   "Jump to the given source file.
 
 Normalizes the source filename and adds the xplan base folder and the specified path.
@@ -22,7 +22,8 @@ Returns the normalized filename (minus xplan base).
                      (replace-match "\\" nil t))
                    (buffer-string))))
     (let ((file (concat xplan-base path normalized)))
-      (if (file-exists-p file)
+      (if (or (file-exists-p file)
+              CREATE)
           (find-file file)
         ;; indicate file doesn't exist in resulting message
         (setq normalized (concat normalized " (not found)"))))
@@ -72,17 +73,17 @@ Follow python imports, urls to request handlers, rpc calls etc."
         ;; html template, / separated path
         ((string-match "\\(get_popup_template\\|get_full_page_popup_template\\|Template\\)(['\"]\\(.+\\)['\"]" cur_line)
          (message "xplan/jump: get_popup_template --> %s"
-                  (xplan/jump-file "data\\ihtml\\" (match-string 2 cur_line))))
+                  (xplan/jump-file "data\\ihtml\\" (match-string 2 cur_line) t))) ; create if necessary
 
         ;; html template, path in list/tuple
         ((string-match "\\_<\\(get\\w*TPO\\|get_.+_template\\|Template\\|getMainFrame\\)(\\[\\([^]]+\\)\\]" cur_line)
          (message "xplan/jump: Template --> %s"
-                  (xplan/jump-file "data\\ihtml\\" (match-string 2 cur_line))))
+                  (xplan/jump-file "data\\ihtml\\" (match-string 2 cur_line) t))) ; create if necessary
 
         ;; <:include html_template:>
         ((string-match "<:include \\(.+\\):>" cur_line)
          (message "xplan/jump: include --> %s"
-                  (xplan/jump-file "data\\ihtml\\" (match-string 1 cur_line))))
+                  (xplan/jump-file "data\\ihtml\\" (match-string 1 cur_line) t))) ; create if necessary
 
         ;; $ADD_JAVASCRIPT
         ((string-match "$ADD_JAVASCRIPT(['\"]\\(.+\\)['\"])" cur_line)
