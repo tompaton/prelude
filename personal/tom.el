@@ -137,7 +137,9 @@
 (global-set-key (kbd "H-SPC") 'set-rectangular-region-anchor)
 
 (add-to-list 'mc/cmds-to-run-for-all 'python-backspace)
+(add-to-list 'mc/cmds-to-run-for-all 'python-electric-colon)
 (add-to-list 'mc/cmds-to-run-once    'handle-switch-frame)
+(add-to-list 'mc/cmds-to-run-once    'previous-multiframe-window)
 
 ;; Comment/uncomment block
 (global-set-key (kbd "C-c c") 'comment-or-uncomment-region)
