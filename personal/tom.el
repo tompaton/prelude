@@ -259,6 +259,9 @@
 ;; html should use 4 spaces to indent
 (setq sgml-basic-offset 4)
 
+;; list-directory command is pointless
+(global-set-key (kbd "C-x C-d") 'ido-dired)
+
 ;; load config from local/ folder based on current machine name
 (let ((local-el (concat "~/.emacs.d/personal/local/" system-name ".el")))
   (when (file-exists-p local-el)
