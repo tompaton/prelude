@@ -244,17 +244,23 @@
 
 ;; cycle buffer through major modes I use that may not be detected
 ;; correctly by emacs
-(defun cycle-modes (modes)
-  (let ((next-mode (cadr (memq major-mode modes))))
-    (unless next-mode
-      (setq next-mode (car modes)))
-    (funcall next-mode)))
-(global-set-key (kbd "<f9>") #'(lambda ()
-                                 (interactive)
-                                 (cycle-modes '(python-mode
-                                                html-mode
-                                                javascript-mode
-                                                fundamental-mode))))
+;; (defun cycle-modes (modes)
+;;   (let ((next-mode (cadr (memq major-mode modes))))
+;;     (unless next-mode
+;;       (setq next-mode (car modes)))
+;;     (funcall next-mode)))
+;; (global-set-key (kbd "<f9>") #'(lambda ()
+;;                                  (interactive)
+;;                                  (cycle-modes '(python-mode
+;;                                                 html-mode
+;;                                                 javascript-mode
+;;                                                 fundamental-mode))))
+
+;; cycling modes is problematic as python-mode leaves broken flycheck- files around everywhere
+;; so set up some shortcuts to go directly to the mode I'm after
+(global-set-key (kbd "C-c mh") 'html-mode)
+(global-set-key (kbd "C-c mp") 'python-mode)
+(global-set-key (kbd "C-c mj") 'javascript-mode)
 
 ;; html should use 4 spaces to indent
 (setq sgml-basic-offset 4)
