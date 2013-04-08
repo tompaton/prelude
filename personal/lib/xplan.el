@@ -76,6 +76,11 @@ Follow python imports, urls to request handlers, rpc calls etc."
                   (xplan/jump-file "data\\ihtml\\" (match-string 2 cur_line) t))) ; create if necessary
 
         ;; html template, path in list/tuple
+        ;; getTPO(request, [...path...])
+        ((string-match "\\_<getTPO(\\w+,\\W*\\[\\([^]]+\\)\\]" cur_line)
+         (message "xplan/jump: Template --> %s"
+                  (xplan/jump-file "data\\ihtml\\" (match-string 1 cur_line) t))) ; create if necessary
+        ;; getSimpleTPO([...path...])
         ((string-match "\\_<\\(get\\w*TPO\\|get_.+_template\\|Template\\|getMainFrame\\)(\\[\\([^]]+\\)\\]" cur_line)
          (message "xplan/jump: Template --> %s"
                   (xplan/jump-file "data\\ihtml\\" (match-string 2 cur_line) t))) ; create if necessary
