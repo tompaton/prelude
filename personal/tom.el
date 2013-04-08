@@ -262,6 +262,9 @@
 ;; list-directory command is pointless
 (global-set-key (kbd "C-x C-d") 'ido-dired)
 
+;; raise-frame method is annoying
+(setq ido-default-buffer-method 'selected-window)
+
 ;; load config from local/ folder based on current machine name
 (let ((local-el (concat "~/.emacs.d/personal/local/" system-name ".el")))
   (when (file-exists-p local-el)
