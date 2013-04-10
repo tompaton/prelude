@@ -41,6 +41,8 @@
         ))
 (setq indicate-empty-lines t)
 
+(global-set-key (kbd "C-c w") 'delete-trailing-whitespace)
+
 ;; add a vertical line at column 100
 (require 'fill-column-indicator)
 (define-globalized-minor-mode global-fci-mode fci-mode (lambda () (fci-mode 1)))
