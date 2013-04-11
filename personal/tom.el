@@ -138,13 +138,16 @@
 (global-set-key (kbd "M-[") 'mc/mark-previous-like-this)
 (global-set-key (kbd "H-SPC") 'set-rectangular-region-anchor)
 
-(add-to-list 'mc/cmds-to-run-for-all 'python-backspace)
-(add-to-list 'mc/cmds-to-run-for-all 'python-electric-colon)
-(add-to-list 'mc/cmds-to-run-for-all 'jump-char-forward)
-(add-to-list 'mc/cmds-to-run-for-all 'jump-char-process-char)
-(add-to-list 'mc/cmds-to-run-for-all 'sgml-slash)
-(add-to-list 'mc/cmds-to-run-once    'handle-switch-frame)
-(add-to-list 'mc/cmds-to-run-once    'previous-multiframe-window)
+(setq mc/cmds-to-run-for-all
+      '(python-electric-colon
+        sgml-slash
+        python-backspace
+        backward-sexp
+        jump-char-forward
+        jump-char-process-char))
+(setq mc/cmds-to-run-once
+      '(handle-switch-frame
+        previous-multiframe-window))
 
 ;; Comment/uncomment block
 (global-set-key (kbd "C-c c") 'comment-or-uncomment-region)
