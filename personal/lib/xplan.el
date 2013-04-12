@@ -55,7 +55,7 @@ Follow python imports, urls to request handlers, rpc calls etc."
        (cond
 
         ;; RPC calls
-        ((string-match "callJSON(['\\\"]\\(.+\\)\\.\\(.+\\)['\\\"]" cur_line)
+        ((string-match "\\(?:callJSON\\|XMLRPC\\.call\\)(['\\\"]\\(.+\\)\\.\\(.+\\)['\\\"]" cur_line)
          (let ((module (match-string 1 cur_line))
                (file "rpc.py")
                (method (concat "rpc_" (match-string 2 cur_line))))
