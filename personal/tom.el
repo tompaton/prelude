@@ -20,7 +20,7 @@
                               fill-column-indicator))
 
 ;; load my utility functions
-(load-file "lib/toms-utils.el")
+(load-file "~/.emacs.d/personal/lib/toms-utils.el")
 
 ;; highlight everything in whitespace-mode except long lines
 (require 'whitespace)
@@ -168,6 +168,7 @@
 (global-set-key (kbd "C-`") 'other-frame)
 (global-set-key (kbd "<C-tab>") 'next-multiframe-window)
 (global-set-key (kbd "<C-S-tab>") 'previous-multiframe-window)
+(global-set-key (kbd "<C-S-iso-lefttab>") 'previous-multiframe-window) ;; for ubuntu
 (global-set-key (kbd "C-x o") 'other-window)
 
 ;; transpose windows
@@ -226,6 +227,11 @@
 
 ;; raise-frame method is annoying
 (setq ido-default-buffer-method 'selected-window)
+
+;; i can never remember the name/key for this
+(defun unix-eol ()
+  (interactive)
+  (set-buffer-file-coding-system 'utf-8-unix))
 
 ;; load config from local/ folder based on current machine name
 (let ((local-el (concat "~/.emacs.d/personal/local/" system-name ".el")))
