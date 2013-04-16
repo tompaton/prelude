@@ -108,6 +108,8 @@
 
 ;; highlight symbol under point and alt-left/right to navigate between references
 (setq highlight-symbol-idle-delay 0.2)
+(setq highlight-symbol-colors '("yellow" "cyan" "SpringGreen1"))
+
 (global-set-key (kbd "<M-right>") 'highlight-symbol-next)
 (global-set-key (kbd "<M-left>") 'highlight-symbol-prev)
 (global-set-key (kbd "M-h") 'highlight-symbol-at-point)
