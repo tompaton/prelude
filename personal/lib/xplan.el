@@ -30,13 +30,23 @@ Returns the normalized filename (minus xplan base).
     ;; return resulting filename
     (concat path normalized)))
 
-(defun xplan/jump-method (method)
+(defun xplan/get-file-from-module (module)
+  (with-temp-buffer
+    (insert module)
+    (goto-char (point-min))
+    (while (search-forward "." nil t)
+      (replace-match "\\\\"))
+    (concat (buffer-string) ".py")))
+
+(defun xplan/jump-method (method &optional def)
   "Jump to top level python function in current buffer"
+  (unless def
+    (setq def "def"))
   (let ((pos (point)))
     (goto-char (point-min))
     (if (ignore-errors
           ;; only match at col 1
-          (re-search-forward (concat "^def " method "(")))
+          (re-search-forward (concat "^" def " " method "(")))
         (recenter-top-bottom)
       (progn
         ;; restore cursor
@@ -71,7 +81,7 @@ Follow python imports, urls to request handlers, rpc calls etc."
                     (xplan/jump-method method))))
 
         ;; html template, / separated path
-        ((string-match "\\(get_popup_template\\|get_full_page_popup_template\\|Template\\)(['\"]\\(.+\\)['\"]" cur_line)
+        ((string-match "\\(get_popup_template\\|get_full_page_popup_template\\|init_engage_tpl\\|Template\\)(['\"]\\(.+\\)['\"]" cur_line)
          (message "xplan/jump: get_popup_template --> %s"
                   (xplan/jump-file "data\\ihtml\\" (match-string 2 cur_line) t))) ; create if necessary
 
@@ -123,6 +133,15 @@ Follow python imports, urls to request handlers, rpc calls etc."
            (message "xplan/jump: url --> %s :: %s"
                     (xplan/jump-file "src\\py\\xpt\\" (concat module "\\" file))
                     (xplan/jump-method method))))
+
+        ;; import class/function from module
+        ;; TODO: import module from path
+        ((string-match "from \\(xpt\\..+\\) import \\(.+\\)" cur_line)
+         (let ((module (match-string 1 cur_line))
+               (symbol (match-string 2 cur_line)))
+           (message "xplan/jump: import --> %s :: %s"
+                    (xplan/jump-file "src\\py\\" (xplan/get-file-from-module module))
+                    (xplan/jump-method symbol "\\(def\\|class\\)"))))
 
         (t
          (message "xplan/jump: match not found")))))
