@@ -180,3 +180,23 @@ Follow python imports, urls to request handlers, rpc calls etc."
 ;;   nil
 ;;   'which-function)
 
+;; html editing for xplan templates
+(prelude-ensure-module-deps '(mmm-mode))
+
+(require 'mmm-auto)
+(mmm-add-group
+ 'html-xplan
+ '((xplan-expr
+    :submode python
+    :face mmm-output-submode-face
+    :front "<:"
+    :back ":>"
+    :insert ((?= xplan-expr nil @ "<:" @ " " _ " " @ ":>" @)))
+   ))
+(setq mmm-global-mode 'maybe)
+(mmm-add-mode-ext-class 'html-mode "\\.html\\'" 'html-xplan)
+(mmm-add-mode-ext-class 'html-mode "\\.html\\'" 'html-js)
+(mmm-add-mode-ext-class 'html-mode "\\.html\\'" 'html-css)
+
+(set-face-attribute 'mmm-default-submode-face nil
+                    :background "#f0f0ff")
