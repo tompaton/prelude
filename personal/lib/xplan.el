@@ -72,9 +72,8 @@ Returns the normalized filename (minus xplan base).
              (xplan/jump-file "src\\py\\xpt\\" (concat module "\\" file))
              (xplan/jump-method method))))
 
-(defun xplan/jump-url (module file method)
+(defun xplan/jump-url-handler (module file method)
   "Jump to the url handler for url 'module/method', in file (e.g. protocol.py.)"
-  (interactive "sModule: \nsFile: \nsMethod: ")
   (setq method (concat "req_" method))
   ;; rr, iqm1, iqm2 are in insurance subfolder
   (cond ((string-match "\\(\\_<rr\\|rr_sg\\|rr_gb\\|iqm1\\|iqm2\\_>\\)" module)
@@ -82,6 +81,20 @@ Returns the normalized filename (minus xplan base).
   (message "xplan/jump: url --> %s :: %s"
            (xplan/jump-file "src\\py\\xpt\\" (concat module "\\" file))
            (xplan/jump-method method)))
+
+(defun xplan/jump-url (url)
+  "Jump to the handler for 'url'"
+  (interactive "sUrl: ")
+  (let ((bits (split-string url "/")))
+    (if (string= "" (car bits))
+        (setq bits (cdr bits)))
+    (if (= (length bits) 2)
+        (xplan/jump-url-handler (nth 0 bits)
+                                "protocol.py"
+                                (nth 1 bits))
+      (xplan/jump-url-handler (nth 0 bits)
+                              (concat "req_" (nth 1 bits) ".py")
+                              (nth 2 bits)))))
 
 (defun xplan/jump ()
      "Jump to the appropriate source file/line based on the current line
@@ -133,13 +146,13 @@ Follow python imports, urls to request handlers, rpc calls etc."
 
         ;; url --> protocol req handler
         ((string-match "/\\(sysadmin\\)/\\(supersolver\\)/\\([[:word:]_]+\\)" cur_line)
-         (xplan/jump-url (match-string 1 cur_line)
-                         (concat "req_" (match-string 2 cur_line) ".py")
-                         (match-string 3 cur_line)))
+         (xplan/jump-url-handler (match-string 1 cur_line)
+                                 (concat "req_" (match-string 2 cur_line) ".py")
+                                 (match-string 3 cur_line)))
         ((string-match "/\\(iqm\\+/rr\\|supersolver\\)/\\([[:word:]_]+\\)" cur_line)
-         (xplan/jump-url (match-string 1 cur_line)
-                         "protocol.py"
-                         (match-string 2 cur_line)))
+         (xplan/jump-url-handler (match-string 1 cur_line)
+                                 "protocol.py"
+                                 (match-string 2 cur_line)))
 
         ;; import class/function from module
         ;; TODO: import module from path
