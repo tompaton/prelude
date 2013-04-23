@@ -20,14 +20,23 @@
 
 (mmm-add-group
  'html-django
- '((django-expr
+ '(
+   ;; custom map tag in gps2 project contains javascript
+   (map-tag
+    :submode js-mode
+    :face mmm-code-submode-face
+    :front "{% map .+ %}"
+    :back "{% endmap %}")
+   
+   ;; normal django tags and expressions
+   (django-expr
     :submode python-mode
     :face mmm-declaration-submode-face
     :front "{%"
     :back "%}"
     :include-front t
     :include-back t)
-   (my-django-var
+   (django-var
     :submode python
     :face mmm-output-submode-face
     :front "{{"
