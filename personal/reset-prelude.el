@@ -7,6 +7,9 @@
 ;; C-c k prelude-kill-other-buffers is easily mistyped when going for C-x k
 (put 'prelude-kill-other-buffers 'disabled t)
 
+;; quitting by mistake is really annoying
+(global-set-key (kbd "C-x C-c") nil)
+
 ;; no point hamstringing myself by hiding the menu
 (menu-bar-mode t)
 
