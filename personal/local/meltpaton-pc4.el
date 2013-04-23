@@ -69,6 +69,9 @@
 ;; menu-bar-on (make-frame turns it off)
 (menu-bar-mode)
 
+;; seems like these settings get lost after opening multiple frames
+(tom/customise-whitespace-mode-faces)
+
 ;;(require 'find-file-in-project)
 ;;(setq ffip-project-file ".svn")
 ;;(global-set-key (kbd "C-x f") 'find-file-in-project)

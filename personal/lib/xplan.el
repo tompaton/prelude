@@ -166,39 +166,6 @@ Follow python imports, urls to request handlers, rpc calls etc."
         (t
          (message "xplan/jump: match not found")))))
 
-;; (require 'jump)
-;; (defjump
-;;   'rinari-find-model
-;;   '(("app/controllers/\\1_controller.rb#\\2"  . "app/models/\\1.rb#\\2")
-;;     ("app/views/\\1/.*"                       . "app/models/\\1.rb")
-;;     ("app/helpers/\\1_helper.rb"              . "app/models/\\1.rb")
-;;     ("db/migrate/.*create_\\1.rb"             . "app/models/\\1.rb")
-;;     ("test/functional/\\1_controller_test.rb" . "app/models/\\1.rb")
-;;     ("test/unit/\\1_test.rb#test_\\2"         . "app/models/\\1.rb#\\2")
-;;     ("test/unit/\\1_test.rb"                  . "app/models/\\1.rb")
-;;     ("test/fixtures/\\1.yml"                  . "app/models/\\1.rb")
-;;     (t                                        . "app/models/"))
-;;   'rinari-root
-;;   "Go to the most logical model given the current location."
-;;   '(lambda (path)
-;;      (message (shell-command-to-string
-;; 	       (format "ruby %sscript/generate model %s"
-;; 		       (rinari-root)
-;; 		       (and (string-match ".*/\\(.+?\\)\.rb" path)
-;; 			    (match-string 1 path))))))
-;;   'ruby-add-log-current-method)
-
-;; (require 'jump)
-;; (defjump
-;;   xplan-find-file
-;;   (
-;;    ("/supersolver/\\2" . "src\\\\py\\\\xpt\\\\supersolver\\\\protocol.py")
-;;    ("callJSON(['\"]\\1\\.\\2['\"]" . "src\\\\py\\\\xpt\\\\\\1\\\\rpc.py")
-;;    )
-;;   "c:\\xplanbase\\version\\2.99.999\\"
-;;   "Follow a logical link from one part of the source to another."
-;;   nil
-;;   'which-function)
 
 ;; html editing for xplan templates
 (prelude-ensure-module-deps '(mmm-mode))
@@ -210,13 +177,21 @@ Follow python imports, urls to request handlers, rpc calls etc."
     :submode python
     :face mmm-output-submode-face
     :front "<:"
+    :include-front t
     :back ":>"
-    :insert ((?= xplan-expr nil @ "<:" @ " " _ " " @ ":>" @)))
-   ))
-(setq mmm-global-mode 'maybe)
+    :include-back t)))
+
 (mmm-add-mode-ext-class 'html-mode "\\.html\\'" 'html-xplan)
 (mmm-add-mode-ext-class 'html-mode "\\.html\\'" 'html-js)
 (mmm-add-mode-ext-class 'html-mode "\\.html\\'" 'html-css)
 
-(set-face-attribute 'mmm-default-submode-face nil
-                    :background "#f0f0ff")
+(setq mmm-global-mode 'maybe)
+(setq mmm-parse-when-idle t)
+(setq mmm-submode-decoration-level 2)  ; high
+;; don't need javascript background to be special
+(set-face-attribute 'mmm-code-submode-face nil
+                    :background nil)
+;; light shading on embedded python
+(set-face-attribute 'mmm-output-submode-face nil
+                    :background "#EEEEFF")
+

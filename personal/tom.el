@@ -8,7 +8,6 @@
                               expand-region
                               highlight-symbol
                               hlinum
-                              jump
                               jump-char
                               multiple-cursors
                               smooth-scrolling
@@ -24,25 +23,29 @@
 
 ;; highlight everything in whitespace-mode except long lines
 (require 'whitespace)
-(setq whitespace-style (quote
-                        (face spaces tabs trailing newline space-before-tab indentation empty space-after-tab space-mark tab-mark newline-mark)))
-;; no yellow background on spaces
-(set-face-attribute 'whitespace-space nil
-                    :background nil)
-;; subtler trailing space background
-(set-face-attribute 'whitespace-trailing nil
-                    :foreground "#F88"
-                    :background nil
-                    :weight 'light)
-;; nicer tab & cr indicators
-(setq whitespace-display-mappings
-      ;; all numbers are Unicode codepoint in decimal
-      '(
-        (space-mark   32 [183] [46])      ; 32 SPACE 「 」, 183 MIDDLE DOT 「·」, 46 FULL STOP 「.」
-        (newline-mark 10 [182 10])        ; 10 LINE FEED
-        (tab-mark      9 [8594 9] [92 9]) ; 9 TAB, 9655 WHITE RIGHT-POINTING TRIANGLE 「▷」
-        ))
-(setq indicate-empty-lines t)
+
+(defun tom/customise-whitespace-mode-faces () ; defun so can be called again in meltpaton-pc4.el
+  (setq whitespace-style (quote
+                          (face spaces tabs trailing newline space-before-tab indentation empty space-after-tab space-mark tab-mark newline-mark)))
+  ;; no yellow background on spaces
+  (set-face-attribute 'whitespace-space nil
+                      :background nil)
+  ;; subtler trailing space background
+  (set-face-attribute 'whitespace-trailing nil
+                      :foreground "#F88"
+                      :background nil
+                      :weight 'light)
+  ;; nicer tab & cr indicators
+  (setq whitespace-display-mappings
+        ;; all numbers are Unicode codepoint in decimal
+        '(
+          (space-mark   32 [183] [46])      ; 32 SPACE 「 」, 183 MIDDLE DOT 「·」, 46 FULL STOP 「.」
+          (newline-mark 10 [182 10])        ; 10 LINE FEED
+          (tab-mark      9 [8594 9] [92 9]) ; 9 TAB, 9655 WHITE RIGHT-POINTING TRIANGLE 「▷」
+          ))
+  (setq indicate-empty-lines t))
+
+(tom/customise-whitespace-mode-faces)
 
 (global-set-key (kbd "C-c w") 'delete-trailing-whitespace)
 
@@ -93,6 +96,11 @@
 (require 'jump-char)
 (global-set-key (kbd "M-m") 'jump-char-forward)
 (global-set-key (kbd "M-S-m") 'jump-char-backward)
+;; jump-char + multiple-cursors seems to trash isearch-mode-map?
+(setq tom/isearch-mode-map (copy-sequence isearch-mode-map))
+(defun tom/restore-isearch-mode-map ()
+  (interactive)
+  (setq isearch-mode-map tom/isearch-mode-map))
 
 ;; visual studio style bookmarks
 (global-set-key (kbd "<C-f2>") 'bm-toggle)
