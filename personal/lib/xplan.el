@@ -56,6 +56,33 @@ Returns the normalized filename (minus xplan base).
     ;; return method
     method))
 
+(defun xplan/jump-rpc (module method)
+  "Jump to the rpc handler for 'module.method'."
+  (interactive "sModule: \nsMethod: ")
+  (let ((file "rpc.py"))
+    (setq method (concat "rpc_" method))
+    ;; rr, iqm1, iqm2 are in insurance subfolder
+    (cond ((string-match "\\_<rr\\|rr_sg\\|rr_gb\\|iqm1\\|iqm2\\_>" module)
+           (setq module (concat "insurance\\" module))))
+    ;; sysadmin uses rpc for each module
+    (cond ((string-match "\\(sysadmin\\)\\.\\(.+\\)" module)
+           (setq file (concat "rpc_" (match-string 2 module) ".py"))
+           (setq module (match-string 1 module))))
+    (message "xplan/jump: callJSON --> %s :: %s"
+             (xplan/jump-file "src\\py\\xpt\\" (concat module "\\" file))
+             (xplan/jump-method method))))
+
+(defun xplan/jump-url (module file method)
+  "Jump to the url handler for url 'module/method', in file (e.g. protocol.py.)"
+  (interactive "sModule: \nsFile: \nsMethod: ")
+  (setq method (concat "req_" method))
+  ;; rr, iqm1, iqm2 are in insurance subfolder
+  (cond ((string-match "\\(\\_<rr\\|rr_sg\\|rr_gb\\|iqm1\\|iqm2\\_>\\)" module)
+         (setq module (concat "insurance\\" (match-string 1 module)))))
+  (message "xplan/jump: url --> %s :: %s"
+           (xplan/jump-file "src\\py\\xpt\\" (concat module "\\" file))
+           (xplan/jump-method method)))
+
 (defun xplan/jump ()
      "Jump to the appropriate source file/line based on the current line
 
@@ -66,19 +93,8 @@ Follow python imports, urls to request handlers, rpc calls etc."
 
         ;; RPC calls
         ((string-match "\\(?:callJSON\\|XMLRPC\\.call\\)(['\\\"]\\(.+\\)\\.\\(.+\\)['\\\"]" cur_line)
-         (let ((module (match-string 1 cur_line))
-               (file "rpc.py")
-               (method (concat "rpc_" (match-string 2 cur_line))))
-           ;; rr, iqm1, iqm2 are in insurance subfolder
-           (cond ((string-match "\\_<rr\\|rr_sg\\|rr_gb\\|iqm1\\|iqm2\\_>" module)
-                  (setq module (concat "insurance\\" module))))
-           ;; sysadmin uses rpc for each module
-           (cond ((string-match "\\(sysadmin\\)\\.\\(.+\\)" module)
-                  (setq file (concat "rpc_" (match-string 2 module) ".py"))
-                  (setq module (match-string 1 module))))
-           (message "xplan/jump: callJSON --> %s :: %s"
-                    (xplan/jump-file "src\\py\\xpt\\" (concat module "\\" file))
-                    (xplan/jump-method method))))
+         (xplan/jump-rpc (match-string 1 cur_line)
+                         (match-string 2 cur_line)))
 
         ;; html template, / separated path
         ((string-match "\\(get_popup_template\\|get_full_page_popup_template\\|init_engage_tpl\\|Template\\)(['\"]\\(.+\\)['\"]" cur_line)
@@ -87,9 +103,9 @@ Follow python imports, urls to request handlers, rpc calls etc."
 
         ;; html template, path in list/tuple
         ;; getTPO(request, [...path...])
-        ((string-match "\\_<getTPO(\\w+,\\W*\\[\\([^]]+\\)\\]" cur_line)
+        ((string-match "\\_<\\(get\\w*TPO\\)([[:word:]_]+,\\W*\\[\\([^]]+\\)\\]" cur_line)
          (message "xplan/jump: Template --> %s"
-                  (xplan/jump-file "data\\ihtml\\" (match-string 1 cur_line) t))) ; create if necessary
+                  (xplan/jump-file "data\\ihtml\\" (match-string 2 cur_line) t))) ; create if necessary
         ;; getSimpleTPO([...path...])
         ((string-match "\\_<\\(get\\w*TPO\\|get_.+_template\\|Template\\|getMainFrame\\)(\\[\\([^]]+\\)\\]" cur_line)
          (message "xplan/jump: Template --> %s"
@@ -117,22 +133,13 @@ Follow python imports, urls to request handlers, rpc calls etc."
 
         ;; url --> protocol req handler
         ((string-match "/\\(sysadmin\\)/\\(supersolver\\)/\\([[:word:]_]+\\)" cur_line)
-         (let ((module (match-string 1 cur_line))
-               (file (concat "req_" (match-string 2 cur_line) ".py"))
-               (method (concat "req_" (match-string 3 cur_line))))
-           (message "xplan/jump: url --> %s :: %s"
-                    (xplan/jump-file "src\\py\\xpt\\" (concat module "\\" file))
-                    (xplan/jump-method method))))
+         (xplan/jump-url (match-string 1 cur_line)
+                         (concat "req_" (match-string 2 cur_line) ".py")
+                         (match-string 3 cur_line)))
         ((string-match "/\\(iqm\\+/rr\\|supersolver\\)/\\([[:word:]_]+\\)" cur_line)
-         (let ((module (match-string 1 cur_line))
-               (file "protocol.py")
-               (method (concat "req_" (match-string 2 cur_line))))
-           ;; rr, iqm1, iqm2 are in insurance subfolder
-           (cond ((string-match "\\(\\_<rr\\|rr_sg\\|rr_gb\\|iqm1\\|iqm2\\_>\\)" module)
-                  (setq module (concat "insurance\\" (match-string 1 module)))))
-           (message "xplan/jump: url --> %s :: %s"
-                    (xplan/jump-file "src\\py\\xpt\\" (concat module "\\" file))
-                    (xplan/jump-method method))))
+         (xplan/jump-url (match-string 1 cur_line)
+                         "protocol.py"
+                         (match-string 2 cur_line)))
 
         ;; import class/function from module
         ;; TODO: import module from path
