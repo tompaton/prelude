@@ -33,6 +33,7 @@
 ;;; Code:
 
 (require 'thingatpt)
+(require 'dash)
 
 (defun prelude-open-with ()
   "Open visited file in external program."
@@ -263,8 +264,9 @@ buffer is not visiting a file."
 
 (defadvice ido-find-file (after find-file-sudo activate)
   "Find file as root if necessary."
-  (unless (and buffer-file-name
-               (file-writable-p buffer-file-name))
+  (unless (or (equal major-mode 'dired-mode)
+              (and (buffer-file-name)
+                   (file-writable-p buffer-file-name)))
     (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
 
 (defun prelude-switch-or-start (function buffer)
@@ -290,7 +292,9 @@ buffer is not visiting a file."
 (defun prelude-recentf-ido-find-file ()
   "Find a recent file using ido."
   (interactive)
-  (let ((file (ido-completing-read "Choose recent file: " recentf-list nil t)))
+  (let ((file (ido-completing-read "Choose recent file: "
+                                   (-map 'abbreviate-file-name recentf-list)
+                                   nil t)))
     (when file
       (find-file file))))
 
@@ -310,6 +314,12 @@ buffer is not visiting a file."
       (set-window-start w1 s2)
       (set-window-start w2 s1)))
   (other-window 1))
+
+(defun prelude-switch-to-previous-buffer ()
+  "Switch to previously open buffer.
+Repeated invocations toggle between the two most recently open buffers."
+  (interactive)
+  (switch-to-buffer (other-buffer (current-buffer) 1)))
 
 (defun prelude-kill-other-buffers ()
   "Kill all buffers but the current one.
