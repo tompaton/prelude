@@ -15,6 +15,16 @@
       (beginning-of-line)
     (back-to-indentation)))
 
+;; delete trailing whitespace from current line only
+(defun tom/delete-trailing-whitespace-current-line ()
+  (interactive)
+  (save-excursion
+    (move-end-of-line nil)
+    (let ((end (point)))
+      (forward-line 0)
+      (let ((start (point)))
+        (delete-trailing-whitespace start end)))))
+
 ;; toggle quotes
 (defun tom/toggle-quotes ()
   "Toggle single quoted string to double or vice versa, and

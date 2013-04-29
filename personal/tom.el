@@ -48,6 +48,7 @@
 (tom/customise-whitespace-mode-faces)
 
 (global-set-key (kbd "C-c w") 'delete-trailing-whitespace)
+(global-set-key (kbd "C-c DEL") 'tom/delete-trailing-whitespace-current-line)
 
 ;; add a vertical line at column 100
 (require 'fill-column-indicator)
