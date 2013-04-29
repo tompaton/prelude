@@ -123,6 +123,10 @@ Follow python imports, urls to request handlers, rpc calls etc."
         ((string-match "\\_<\\(get\\w*TPO\\|get_.+_template\\|Template\\|getMainFrame\\)(\\[\\([^]]+\\)\\]" cur_line)
          (message "xplan/jump: Template --> %s"
                   (xplan/jump-file "data\\ihtml\\" (match-string 2 cur_line) t))) ; create if necessary
+        ;; tpo.setFile('name', [...path...])
+        ((string-match "\\_<\\(setFile\\)(['\"][[:word:]_]+['\"],\\W*\\[\\([^]]+\\)\\]" cur_line)
+         (message "xplan/jump: Template --> %s"
+                  (xplan/jump-file "data\\ihtml\\" (match-string 2 cur_line) t))) ; create if necessary
 
         ;; <:include html_template:>
         ((string-match "<:include \\(.+\\):>" cur_line)
