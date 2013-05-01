@@ -183,9 +183,16 @@ Follow python imports, urls to request handlers, rpc calls etc."
          (message "xplan/jump: match not found")))))
 
 (defun xplan/jump-branch (branch)
-  "Jump to the current file in the other branch"
+  "Jump to the current file in the other branch
+
+branch can be 'major.minor.patch', or just 'major.minor' or 'minor'."
   (interactive "sBranch: ")
-  (let ((filename (buffer-file-name)))
+  (let ((filename (buffer-file-name))
+        (branch_bits (split-string branch "\\.")))
+    (cond ((= (length branch_bits) 1)  ; just minor
+           (setq branch (concat "2." branch ".999")))
+          ((= (length branch_bits) 2)  ; major.minor
+           (setq branch (concat branch ".999"))))
     (string-match "\\(.+\\)2.[0-9]+.999\\(.+\\)" filename)
     (find-file (concat (match-string 1 filename)
                        branch
