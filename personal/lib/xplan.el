@@ -191,6 +191,11 @@ Follow python imports, urls to request handlers, rpc calls etc."
                        branch
                        (match-string 2 filename)))))
 
+(defun xplan/non-trunk-file-p (file)
+  "return t if file is in a version/2.x.999 branch that isn't trunk"
+  (if (string-match ".+\\(2.[0-9]+.999\\).+" file)
+      (not (string-equal (match-string 1 file) "2.99.999"))))
+
 ;; html editing for xplan templates
 (prelude-ensure-module-deps '(mmm-mode))
 

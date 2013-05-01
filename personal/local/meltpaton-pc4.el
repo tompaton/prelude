@@ -83,3 +83,5 @@
 (global-set-key (kbd "C-c Ju") 'xplan/jump-url)
 (global-set-key (kbd "C-c Jb") 'xplan/jump-branch)
 
+(setq recentf-exclude '(xplan/non-trunk-file-p))
+
