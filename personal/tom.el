@@ -244,9 +244,6 @@
   (interactive)
   (set-buffer-file-coding-system 'utf-8-unix))
 
-;; enable subword-mode for all programming modes
-(add-hook 'prog-mode-hook 'subword-mode)
-
 ;; load config from local/ folder based on current machine name
 (let ((local-el (concat "~/.emacs.d/personal/local/" system-name ".el")))
   (when (file-exists-p local-el)
