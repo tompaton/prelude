@@ -1,26 +1,38 @@
+(defun xplan/normalize-path (source)
+  "Convert list of path components to a path if necessary
+and change backslashes to forward slashes."
+  (with-temp-buffer
+    (insert source)
+    ;; convert list of path components to a proper path
+    (goto-char (point-min))
+    (while (re-search-forward "['\"[:blank:]]+" nil t)
+      (replace-match "" nil t))
+    (goto-char (point-min))
+    (while (search-forward "," nil t)
+      (replace-match "\\" nil t))
+    ;; fix backslashes
+    (goto-char (point-min))
+    (while (search-forward "/" nil t)
+      (replace-match "\\" nil t))
+    (buffer-string)))
+
+(defun xplan/branch-base ()
+  "Get the current branch base path from the current file."
+  (xplan/normalize-path
+   (let ((file (buffer-file-name)))
+     (cond ((string-match "\\(c:.xplanbase.version.2.[0-9]+.999.\\)" file)
+            (match-string 1 file))
+           (t
+            "c:\\xplanbase\\version\\2.99.999\\")))))
+
 (defun xplan/jump-file (path source &optional CREATE)
   "Jump to the given source file.
 
 Normalizes the source filename and adds the xplan base folder and the specified path.
 Returns the normalized filename (minus xplan base).
 "
-  ;; TODO: pick up current path
-  (let ((xplan-base "c:\\xplanbase\\version\\2.99.999\\")
-        ;; normalize filename
-        (normalized (with-temp-buffer
-                   (insert source)
-                   ;; convert list of path components to a proper path
-                   (goto-char (point-min))
-                   (while (re-search-forward "['\"[:blank:]]+" nil t)
-                     (replace-match "" nil t))
-                   (goto-char (point-min))
-                   (while (search-forward "," nil t)
-                     (replace-match "\\" nil t))
-                   ;; fix backslashes
-                   (goto-char (point-min))
-                   (while (search-forward "/" nil t)
-                     (replace-match "\\" nil t))
-                   (buffer-string))))
+  (let ((xplan-base (xplan/branch-base))
+        (normalized (xplan/normalize-path source)))
     (let ((file (concat xplan-base path normalized)))
       (if (or (file-exists-p file)
               CREATE)
