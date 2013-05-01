@@ -81,4 +81,5 @@
 (global-set-key (kbd "C-c j") 'xplan/jump)
 (global-set-key (kbd "C-c Jr") 'xplan/jump-rpc)
 (global-set-key (kbd "C-c Ju") 'xplan/jump-url)
+(global-set-key (kbd "C-c Jb") 'xplan/jump-branch)
 

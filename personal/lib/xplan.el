@@ -182,6 +182,14 @@ Follow python imports, urls to request handlers, rpc calls etc."
         (t
          (message "xplan/jump: match not found")))))
 
+(defun xplan/jump-branch (branch)
+  "Jump to the current file in the other branch"
+  (interactive "sBranch: ")
+  (let ((filename (buffer-file-name)))
+    (string-match "\\(.+\\)2.[0-9]+.999\\(.+\\)" filename)
+    (find-file (concat (match-string 1 filename)
+                       branch
+                       (match-string 2 filename)))))
 
 ;; html editing for xplan templates
 (prelude-ensure-module-deps '(mmm-mode))
