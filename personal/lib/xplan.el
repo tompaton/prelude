@@ -1,3 +1,5 @@
+(setq xplan/TRUNK "2.99.999")
+
 (defun xplan/normalize-path (source)
   "Convert list of path components to a path if necessary
 and change backslashes to forward slashes."
@@ -23,7 +25,7 @@ and change backslashes to forward slashes."
      (cond ((string-match "\\(c:.xplanbase.version.2.[0-9]+.999.\\)" file)
             (match-string 1 file))
            (t
-            "c:\\xplanbase\\version\\2.99.999\\")))))
+            (concat "c:\\xplanbase\\version\\" xplan/TRUNK "\\"))))))
 
 (defun xplan/jump-file (path source &optional CREATE)
   "Jump to the given source file.
@@ -201,7 +203,7 @@ branch can be 'major.minor.patch', or just 'major.minor' or 'minor'."
 (defun xplan/non-trunk-file-p (file)
   "return t if file is in a version/2.x.999 branch that isn't trunk"
   (if (string-match ".+\\(2.[0-9]+.999\\).+" file)
-      (not (string-equal (match-string 1 file) "2.99.999"))))
+      (not (string-equal (match-string 1 file) xplan/TRUNK))))
 
 ;; html editing for xplan templates
 (prelude-ensure-module-deps '(mmm-mode))
