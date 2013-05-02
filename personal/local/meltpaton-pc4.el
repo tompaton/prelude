@@ -85,3 +85,9 @@
 
 (setq recentf-exclude '(xplan/non-trunk-file-p))
 
+;; TAGS files for xplan trunk branch
+(setq tags-table-list
+      '("c:/xplanbase/version/2.99.999/src/py/xpt/TAGS"
+        "c:/xplanbase/version/2.99.999/src/py/xlib/TAGS"
+        "c:/xplanbase/version/2.99.999/data/wwwroot/js/TAGS"))
+
