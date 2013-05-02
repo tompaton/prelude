@@ -205,6 +205,16 @@ branch can be 'major.minor.patch', or just 'major.minor' or 'minor'."
   (if (string-match ".+\\(2.[0-9]+.999\\).+" file)
       (not (string-equal (match-string 1 file) xplan/TRUNK))))
 
+(defun xplan/kill-non-trunk-buffers ()
+  "Kill all buffers that are not in the trunk branch.
+Doesn't mess with non-xplan source buffers."
+  (interactive)
+  (dolist (buffer (buffer-list))
+    (let ((file (buffer-file-name buffer)))
+      (when file
+        (when (xplan/non-trunk-file-p file)
+          (kill-buffer buffer))))))
+
 ;; html editing for xplan templates
 (prelude-ensure-module-deps '(mmm-mode))
 
