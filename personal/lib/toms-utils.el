@@ -88,3 +88,12 @@
     (unless next-mode
       (setq next-mode (car modes)))
     (funcall next-mode)))
+
+;; save fingers, repeat M-. instead of M-*
+(defun tom/find-tag ()
+  "Call `find-tag' with current word first time and after that call
+ find-tag with NEXT-P set to t."
+  (interactive)
+  (if (eq last-command 'tom/find-tag)
+      (find-tag nil t)
+    (find-tag (current-word) current-prefix-arg)))

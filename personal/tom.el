@@ -244,6 +244,10 @@
   (interactive)
   (set-buffer-file-coding-system 'utf-8-unix))
 
+;; better find-tag keybindings
+(global-set-key (kbd "M-.") 'tom/find-tag)
+(global-set-key (kbd "M-,") 'pop-tag-mark)
+
 ;; load config from local/ folder based on current machine name
 (let ((local-el (concat "~/.emacs.d/personal/local/" system-name ".el")))
   (when (file-exists-p local-el)
