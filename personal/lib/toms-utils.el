@@ -97,3 +97,13 @@
   (if (eq last-command 'tom/find-tag)
       (find-tag nil t)
     (find-tag (current-word) current-prefix-arg)))
+
+(defun tom/delete-whitespace ()
+  "delete all spaces around the point"
+  (interactive)
+  (re-search-backward "[^ ]")
+  (right-char)
+  (let ((start (point)))
+    (re-search-forward "[^ ]")
+    (left-char 1)
+    (delete-region start (point))))
