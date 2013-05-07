@@ -8,7 +8,6 @@
                               expand-region
                               highlight-symbol
                               hlinum
-                              jump-char
                               multiple-cursors
                               smooth-scrolling
                               ack-and-a-half
@@ -93,16 +92,6 @@
 (global-set-key (kbd "C-S-p") (lambda () (interactive) (ignore-errors (previous-line 5))))
 (global-set-key (kbd "C-S-f") (lambda () (interactive) (ignore-errors (forward-char 5))))
 (global-set-key (kbd "C-S-b") (lambda () (interactive) (ignore-errors (backward-char 5))))
-
-;; jump-char
-(require 'jump-char)
-(global-set-key (kbd "M-m") 'jump-char-forward)
-(global-set-key (kbd "M-S-m") 'jump-char-backward)
-;; jump-char + multiple-cursors seems to trash isearch-mode-map?
-(setq tom/isearch-mode-map (copy-sequence isearch-mode-map))
-(defun tom/restore-isearch-mode-map ()
-  (interactive)
-  (setq isearch-mode-map tom/isearch-mode-map))
 
 ;; visual studio style bookmarks
 (global-set-key (kbd "<C-f2>") 'bm-toggle)
