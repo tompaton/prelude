@@ -102,13 +102,18 @@ Returns the normalized filename (minus xplan base).
   (let ((bits (split-string url "/")))
     (if (string= "" (car bits))
         (setq bits (cdr bits)))
-    (if (= (length bits) 2)
-        (xplan/jump-url-handler (nth 0 bits)
-                                "protocol.py"
-                                (nth 1 bits))
-      (xplan/jump-url-handler (nth 0 bits)
-                              (concat "req_" (nth 1 bits) ".py")
-                              (nth 2 bits)))))
+    (cond ((= (length bits) 2)
+           (xplan/jump-url-handler (nth 0 bits)
+                                   "protocol.py"
+                                   (nth 1 bits)))
+          ((string= (nth 0 bits) "iqm+")
+           (xplan/jump-url-handler (concat "insurance/" (nth 1 bits))
+                                   "protocol.py"
+                                   (nth 2 bits)))
+          (t
+           (xplan/jump-url-handler (nth 0 bits)
+                                   (concat "req_" (nth 1 bits) ".py")
+                                   (nth 2 bits))))))
 
 (defun xplan/jump ()
      "Jump to the appropriate source file/line based on the current line
