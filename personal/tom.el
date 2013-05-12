@@ -133,9 +133,7 @@
       '(python-electric-colon
         sgml-slash
         python-backspace
-        backward-sexp
-        jump-char-forward
-        jump-char-process-char))
+        backward-sexp))
 (setq mc/cmds-to-run-once
       '(handle-switch-frame
         previous-multiframe-window))
@@ -154,6 +152,20 @@
 
 ;; split line on commas and indent (e.g. split python function params to separate lines)
 (global-set-key (kbd "C-c ,") 'tom/split-line-on-comma-and-indent)
+
+;; jump to next = character
+(key-chord-define-global "j=" (lambda ()
+                                (interactive)
+                                (search-forward "=")
+                                (left-char 1)))
+;; jump to prev ( character
+(key-chord-define-global "j9" (lambda ()
+                                (interactive)
+                                (search-backward "(")))
+;; jump to next ) character
+(key-chord-define-global "j0" (lambda ()
+                                (interactive)
+                                (search-forward ")")))
 
 ;; helm
 (require 'helm-files)
