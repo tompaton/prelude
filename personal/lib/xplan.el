@@ -21,7 +21,7 @@ and change backslashes to forward slashes."
 (defun xplan/branch-base ()
   "Get the current branch base path from the current file."
   (xplan/normalize-path
-   (let ((file (buffer-file-name)))
+   (let ((file (or (buffer-file-name) "")))
      (cond ((string-match "\\(c:.xplanbase.version.2.[0-9]+.999.\\)" file)
             (match-string 1 file))
            (t
@@ -51,6 +51,12 @@ Returns the normalized filename (minus xplan base).
     (while (search-forward "." nil t)
       (replace-match "\\\\"))
     (concat (buffer-string) ".py")))
+
+(defun xplan/jump-line-number (line)
+  "Jump to the line number in the current buffer."
+  (goto-char (point-min))
+  (forward-line (1- line))
+  line)
 
 (defun xplan/jump-method (method &optional def)
   "Jump to top level python function in current buffer"
@@ -122,6 +128,22 @@ Follow python imports, urls to request handlers, rpc calls etc."
      (interactive)
      (let ((cur_line (thing-at-point 'line)))
        (cond
+
+        ;; pyflakes warning/error
+        ((string-match "^\\([a-zA-Z0-9_\\./]+\\):\\([0-9]+\\):" cur_line)
+         (let ((file (match-string 1 cur_line))
+               (line (string-to-number (match-string 2 cur_line))))
+           (message "xplan/jump: file:line:msg --> %s (%d)"
+                    (xplan/jump-file "" file)
+                    (xplan/jump-line-number line))))
+
+        ;; Traceback error line
+        ((string-match "^[ ]+File \\\"\\(.+\\)\\\", line \\([0-9]+\\)," cur_line)
+         (let ((file (match-string 1 cur_line))
+               (line (string-to-number (match-string 2 cur_line))))
+           (message "xplan/jump: traceback %s (%d)"
+                    (find-file file)
+                    (xplan/jump-line-number line))))
 
         ;; RPC calls
         ((string-match "\\(?:callJSON\\|XMLRPC\\.call\\)(['\\\"]\\(.+\\)\\.\\(.+\\)['\\\"]" cur_line)
