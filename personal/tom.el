@@ -232,6 +232,7 @@
 (global-set-key (kbd "C-c mh") 'html-mode)
 (global-set-key (kbd "C-c mp") 'python-mode)
 (global-set-key (kbd "C-c mj") 'javascript-mode)
+(global-set-key (kbd "C-c ml") 'lisp-interaction-mode)
 
 ;; html should use 4 spaces to indent
 (setq sgml-basic-offset 4)
