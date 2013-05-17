@@ -19,11 +19,8 @@
 (defun tom/delete-trailing-whitespace-current-line ()
   (interactive)
   (save-excursion
-    (move-end-of-line nil)
-    (let ((end (point)))
-      (forward-line 0)
-      (let ((start (point)))
-        (delete-trailing-whitespace start end)))))
+    (let ((line (bounds-of-thing-at-point 'line)))
+      (delete-trailing-whitespace (car line) (cdr line)))))
 
 ;; toggle quotes
 (defun tom/toggle-quotes ()
@@ -56,13 +53,11 @@
   Use for splitting python function parameters."
   (interactive)
   (save-excursion
-    (move-end-of-line nil)
-    (let ((end (point)))
-      (forward-line 0)
-      (let ((start (point)))
-        (while (search-forward "," end t)
-          (replace-match ",\n" nil t))
-        (indent-region start end)))))
+    (let ((line (bounds-of-thing-at-point 'line)))
+      (goto-char (car line))
+      (while (search-forward "," (cdr line) t)
+        (replace-match ",\n" nil t))
+      (indent-region (car line) (cdr line)))))
 
 ;; find in all buffers
 (defun tom/multi-occur-in-matching-buffers (regexp &optional allbufs)
