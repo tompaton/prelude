@@ -44,6 +44,12 @@ Returns the normalized filename (minus xplan base).
     ;; return resulting filename
     (concat path normalized)))
 
+(defun xplan/is-file (path source)
+  "Does the source file exist in the xplan path."
+  (let ((xplan-base (xplan/branch-base))
+        (normalized (xplan/normalize-path source)))
+    (file-exists-p (concat xplan-base path normalized))))
+
 (defun xplan/get-file-from-module (module)
   (with-temp-buffer
     (insert module)
@@ -200,13 +206,19 @@ Follow python imports, urls to request handlers, rpc calls etc."
                                  (match-string 2 cur_line)))
 
         ;; import class/function from module
-        ;; TODO: import module from path
+        ;; import module from path
         ((string-match "from \\(xpt\\..+\\) import \\(.+\\)" cur_line)
          (let ((module (match-string 1 cur_line))
                (symbol (match-string 2 cur_line)))
-           (message "xplan/jump: import --> %s :: %s"
-                    (xplan/jump-file "src\\py\\" (xplan/get-file-from-module module))
-                    (xplan/jump-method symbol "\\(def\\|class\\)"))))
+           (let ((module2 (concat module "." symbol)))
+             (if (xplan/is-file "src\\py\\" (xplan/get-file-from-module module2))
+                 (message "xplan/jump: import --> %s"
+                          (xplan/jump-file "src\\py\\" (xplan/get-file-from-module module2)))
+               (message "xplan/jump: import --> %s :: %s"
+                        (xplan/jump-file "src\\py\\" (xplan/get-file-from-module module))
+                        (xplan/jump-method symbol "\\(def\\|class\\)"))))))
+
+        ;; TODO: fall through to jump to tag, matching () etc.?
 
         (t
          (message "xplan/jump: match not found")))))
