@@ -62,6 +62,7 @@ Returns the normalized filename (minus xplan base).
   "Jump to the line number in the current buffer."
   (goto-char (point-min))
   (forward-line (1- line))
+  (recenter-top-bottom)
   line)
 
 (defun xplan/jump-method (method &optional def)
@@ -152,7 +153,7 @@ Follow python imports, urls to request handlers, rpc calls etc."
                     (xplan/jump-line-number line))))
 
         ;; RPC calls
-        ((string-match "\\(?:callJSON\\|XMLRPC\\.call\\)(['\\\"]\\(.+\\)\\.\\(.+\\)['\\\"]" cur_line)
+        ((string-match "\\(?:callJSON\\|XMLRPC\\.call\\)(['\\\"]\\([[:word:]_]+\\)\\.\\([[:word:]_]+\\)['\\\"]" cur_line)
          (xplan/jump-rpc (match-string 1 cur_line)
                          (match-string 2 cur_line)))
 
