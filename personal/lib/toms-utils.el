@@ -8,13 +8,6 @@
              (kill-line arg))
     (kill-line arg)))
 
-;; toggle between start of line and start of indentation
-(defun tom/back-to-indentation-or-beginning ()
-  (interactive)
-  (if (= (point) (save-excursion (back-to-indentation) (point)))
-      (beginning-of-line)
-    (back-to-indentation)))
-
 ;; delete trailing whitespace from current line only
 (defun tom/delete-trailing-whitespace-current-line ()
   (interactive)

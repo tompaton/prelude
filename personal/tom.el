@@ -85,9 +85,6 @@
 ;; join lines
 (global-set-key (kbd "M-j") (lambda () (interactive) (join-line -1)))
 
-;; c-a should toggle between start of line and start of indentation
-(global-set-key (kbd "C-a") 'tom/back-to-indentation-or-beginning)
-
 ;; move more quickly
 (global-set-key (kbd "C-S-n") (lambda () (interactive) (ignore-errors (next-line 5))))
 (global-set-key (kbd "C-S-p") (lambda () (interactive) (ignore-errors (previous-line 5))))
@@ -134,8 +131,7 @@
       '(python-electric-colon
         sgml-slash
         python-backspace
-        backward-sexp
-        tom/back-to-indentation-or-beginning))
+        backward-sexp))
 (setq mc/cmds-to-run-once
       '(handle-switch-frame
         previous-multiframe-window))
@@ -168,6 +164,9 @@
 (key-chord-define-global "j0" (lambda ()
                                 (interactive)
                                 (search-forward ")")))
+
+(key-chord-define-global "kk" 'just-one-space)
+(key-chord-define-global "KK" 'delete-horizontal-space)
 
 ;; helm
 (require 'helm-files)
