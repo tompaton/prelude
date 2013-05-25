@@ -88,3 +88,8 @@
   '(progn
      (define-key html-mode-map
        "\C-c?" 'django-close-tag)))
+
+;; tags for gps2
+(setq tags-table-list
+      '("/home/tom/dev/django_projects/gps2-trunk/TAGS"))
+
