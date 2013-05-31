@@ -241,8 +241,8 @@ branch can be 'major.minor.patch', or just 'major.minor' or 'minor'."
                        (match-string 2 filename)))))
 
 (defun xplan/non-trunk-file-p (file)
-  "return t if file is in a version/2.x.999 branch that isn't trunk"
-  (if (string-match ".+\\(2.[0-9]+.999\\).+" file)
+  "return t if file is in a version/2.x.y branch that isn't trunk"
+  (if (string-match ".+\\(2\\.[0-9]+\\.[0-9]+\\).+" file)
       (not (string-equal (match-string 1 file) xplan/TRUNK))))
 
 (defun xplan/kill-non-trunk-buffers ()
