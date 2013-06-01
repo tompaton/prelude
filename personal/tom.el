@@ -83,7 +83,7 @@
 (global-set-key "\C-k" 'tom/kill-and-join-forward)
 
 ;; join lines
-(global-set-key (kbd "M-j") 'prelude-top-join-line)
+(global-set-key (kbd "M-j") prelude-top-join-line)
 
 ;; move more quickly
 (global-set-key (kbd "C-S-n") (lambda () (interactive) (ignore-errors (next-line 5))))
