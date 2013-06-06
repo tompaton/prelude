@@ -85,3 +85,12 @@
   (if (eq last-command 'tom/find-tag)
       (find-tag nil t)
     (find-tag (current-word) current-prefix-arg)))
+
+(defun tom/replace-smart-quotes (beg end)
+  "Replace 'smart quotes' in buffer with ascii quotes."
+  (interactive "r")
+  (format-replace-strings '(("\x201C" . "\"")
+                            ("\x201D" . "\"")
+                            ("\x2018" . "'")
+                            ("\x2019" . "'"))
+                          nil beg end))
