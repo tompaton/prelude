@@ -94,3 +94,28 @@
                             ("\x2018" . "'")
                             ("\x2019" . "'"))
                           nil beg end))
+
+(defun tom/join-lines ()
+  "Join lines, remove trailing \ and leading comment if necessary"
+  (interactive)
+  (save-excursion
+    ;; remove \ at the end of the current line
+    (move-end-of-line 1)
+    (backward-char)
+    (if (looking-at "\\\\")
+        (delete-char 1))
+    ;; joining comments?
+    (if ;;(eq (face-at-point) font-lock-comment-face)
+        (er--point-is-in-comment-p) ; in expand-region-core.el
+        (progn
+         (next-line)
+         ;; remove comment at start of next line)
+         (prelude-move-beginning-of-line 1)
+         (while (looking-at "#")
+             (delete-char 1))
+         (while (looking-at ";")
+             (delete-char 1))
+         (if (looking-at "//")
+             (delete-char 2)))))
+  ;; now join
+  (join-line -1))
