@@ -95,6 +95,12 @@
                             ("\x2019" . "'"))
                           nil beg end))
 
+(defun tom/yank-and-replace-smart-quotes ()
+  "Paste and replace smart quotes"
+  (interactive)
+  (yank)
+  (tom/replace-smart-quotes (mark) (point)))
+
 (defun tom/join-lines ()
   "Join lines, remove trailing \ and leading comment if necessary"
   (interactive)
