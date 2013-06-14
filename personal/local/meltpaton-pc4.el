@@ -28,9 +28,9 @@
 ;; 2) easy_install pip
 ;; 3) pip install flake8
 ;; 4) config in ~/.flake8
-(require 'flymake-python-pyflakes)
-(add-hook 'python-mode-hook 'flymake-python-pyflakes-load)
-(setq flymake-python-pyflakes-executable "flake8")
+;(require 'flymake-python-pyflakes)
+;(add-hook 'python-mode-hook 'flymake-python-pyflakes-load)
+;(setq flymake-python-pyflakes-executable "flake8")
 
 ;; getting ack working in windows
 ;; should be able to have a single copy of ack that runs in cmd.exe and cygwin bash

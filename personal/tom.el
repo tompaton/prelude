@@ -59,9 +59,9 @@
 (setq-default fci-rule-color "#dddddd")
 
 ;; tone down flymake errors and warnings
-(require 'flymake)
-(set-face-attribute 'flymake-errline nil
-                    :background "#ffe8e8")
+;(require 'flymake)
+;(set-face-attribute 'flymake-errline nil
+;                    :background "#ffe8e8")
 
 ;; quick keys to toggle view
 (global-set-key [f5] 'toggle-truncate-lines)
