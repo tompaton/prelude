@@ -128,12 +128,14 @@ Returns the normalized filename (minus xplan base).
                                    (concat "req_" (nth 1 bits) ".py")
                                    (nth 2 bits))))))
 
-(defun xplan/jump ()
+(defun xplan/jump (&optional OTHER_FRAME)
      "Jump to the appropriate source file/line based on the current line
 
 Follow python imports, urls to request handlers, rpc calls etc."
      (interactive)
      (let ((cur_line (thing-at-point 'line)))
+       (if OTHER_FRAME
+           (next-multiframe-window))
        (cond
 
         ;; pyflakes warning/error
