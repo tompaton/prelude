@@ -285,3 +285,7 @@ Doesn't mess with non-xplan source buffers."
 (set-face-attribute 'mmm-output-submode-face nil
                     :background "#EEEEFF")
 
+(defun xplan/list-template-variables ()
+  "Open an *Occur* window for the current buffer listing all $variables"
+  (interactive)
+  (occur "\\$[a-zA-Z0-9_]+"))
