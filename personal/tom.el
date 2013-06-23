@@ -70,7 +70,7 @@
 (global-set-key [f8] 'linum-mode)
 
 ;; word-wrap by default
-(setq default-truncate-lines t)
+(set-default 'truncate-lines t)
 
 ;; show line numbers
 (require 'hlinum)
@@ -173,7 +173,7 @@
 (setq helm-idle-delay 0.1)
 (setq helm-input-idle-delay 0.1)
 (loop for ext in '("\\.pyc$" "\\.pyo$")
-      do (add-to-list 'helm-c-boring-file-regexp-list ext))
+      do (add-to-list 'helm-boring-file-regexp-list ext))
 
 ;; find in all buffers
 (global-set-key (kbd "M-s") 'tom/multi-occur-in-matching-buffers)
