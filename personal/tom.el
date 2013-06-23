@@ -79,10 +79,6 @@
 ;; indent after new line
 (global-set-key (kbd "RET") 'newline-and-indent)
 
-;; insert new lines, a bit like vi
-(global-set-key (kbd "M-o") 'prelude-smart-open-line)
-(global-set-key (kbd "M-O") 'prelude-smart-open-line-above)
-
 ;; remove extra blanks when joining lines
 (global-set-key "\C-k" 'tom/kill-and-join-forward)
 
