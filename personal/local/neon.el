@@ -93,3 +93,7 @@
 (setq tags-table-list
       '("/home/tom/dev/django_projects/gps2-trunk/TAGS"))
 
+(defun recode-buffer-for-cyrillic ()
+  "convert russian translated file from windows-1251-dos to iso-latin-1-unix"
+  (interactive)
+  (recode-region (point-min) (point-max) 'windows-1251-dos 'iso-latin-1-unix))
