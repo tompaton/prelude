@@ -79,6 +79,7 @@
 ;; project specific navigation
 (load "~/.emacs.d/personal/lib/xplan.el")
 (global-set-key (kbd "C-c j") 'xplan/jump)
+(global-set-key (kbd "C-c Jo") (lambda () (interactive) (xplan/jump t))) ; other frame
 (global-set-key (kbd "C-c Jr") 'xplan/jump-rpc)
 (global-set-key (kbd "C-c Ju") 'xplan/jump-url)
 (global-set-key (kbd "C-c Jb") 'xplan/jump-branch)

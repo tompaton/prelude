@@ -125,3 +125,54 @@
              (delete-char 2)))))
   ;; now join
   (join-line -1))
+
+(defun tom/insert-missing-py-import ()
+  "Get current word/region, find an import for that symbol in
+  another buffer and copy it to the top of this buffer."
+  (interactive)
+  (let (symbol)
+    (setq symbol
+          (if (region-active-p)
+              (buffer-substring-no-properties (region-beginning) (region-end))
+            (thing-at-point 'symbol)))
+    (save-excursion
+      (let ((import (tom/find-py-import symbol (buffer-list))))
+        (if import
+          (progn
+            ;; insert at top of current file (below other imports)
+            (goto-char (point-max))
+            (re-search-backward "^\\(import\\|from\\)")
+            (forward-line 1)
+            (insert import)
+            (message "Inserted: %s" (s-trim-right import)))
+          (message "Import not found for: %s" symbol)
+          )))))
+
+;; TODO: might be better to do this by finding all matches,
+;; and selecting the most common one
+(defun tom/find-py-import (symbol buffers)
+  "recursively search buffers for a symbol import"
+  (let ((buffer (car buffers)))
+    (when buffer
+      (let ((import (tom/extract-py-import symbol buffer)))
+        (if import
+            import ; found
+          ;; check next buffer
+          (tom/find-py-import symbol (cdr buffers)))))))
+
+(defun tom/extract-py-import (symbol buffer)
+  "get matching for .. import .. symbol line from buffer"
+  (let ((file (buffer-file-name buffer)))
+    (when file
+      (when (string-match "\.py" file)
+        (with-current-buffer buffer
+          (save-excursion
+            (goto-char (point-min))
+            (when (ignore-errors
+                    ;; look for ... import ... symbol
+                    (re-search-forward (concat "^.*\\bimport\\b.\\b"
+                                               symbol
+                                               "\\b\\.**$")))
+              (let ((line (bounds-of-thing-at-point 'line)))
+                (buffer-substring-no-properties (car line) (cdr line))))
+            ))))))
