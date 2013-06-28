@@ -15,6 +15,7 @@
                               wgrep-ack
                               browse-kill-ring
                               kill-ring-search
+                              col-highlight
                               fill-column-indicator))
 
 ;; load my utility functions
@@ -45,6 +46,10 @@
   (setq indicate-empty-lines t))
 
 (tom/customise-whitespace-mode-faces)
+
+(require 'col-highlight)
+(set-face-attribute 'col-highlight nil
+                    :background "honeydew")
 
 (global-set-key (kbd "C-c w") 'delete-trailing-whitespace)
 (global-set-key (kbd "C-c DEL") 'tom/delete-trailing-whitespace-current-line)
