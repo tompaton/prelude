@@ -92,7 +92,8 @@ Returns the normalized filename (minus xplan base).
     (cond ((string-match "\\_<rr\\|rr_sg\\|rr_gb\\|iqm1\\|iqm2\\_>" module)
            (setq module (concat "insurance\\" module))))
     ;; sysadmin uses rpc for each module
-    (cond ((string-match "\\(sysadmin\\)\\.\\(.+\\)" module)
+    ;; supersolver also supports sub rpc modules
+    (cond ((string-match "\\(sysadmin\\|supersolver\\)\\.\\(.+\\)" module)
            (setq file (concat "rpc_" (match-string 2 module) ".py"))
            (setq module (match-string 1 module))))
     (message "xplan/jump: callJSON --> %s :: %s"
@@ -155,7 +156,7 @@ Follow python imports, urls to request handlers, rpc calls etc."
                     (xplan/jump-line-number line))))
 
         ;; RPC calls
-        ((string-match "\\(?:callJSON\\|XMLRPC\\.call\\)(['\\\"]\\([[:word:]_]+\\)\\.\\([[:word:]_]+\\)['\\\"]" cur_line)
+        ((string-match "\\(?:callJSON\\|XMLRPC\\.call\\)(['\\\"]\\([[:word:]_\\.]+\\)\\.\\([[:word:]_]+\\)['\\\"]" cur_line)
          (xplan/jump-rpc (match-string 1 cur_line)
                          (match-string 2 cur_line)))
 
@@ -200,6 +201,10 @@ Follow python imports, urls to request handlers, rpc calls etc."
 
         ;; url --> protocol req handler
         ((string-match "/\\(sysadmin\\)/\\(supersolver\\)/\\([[:word:]_]+\\)" cur_line)
+         (xplan/jump-url-handler (match-string 1 cur_line)
+                                 (concat "req_" (match-string 2 cur_line) ".py")
+                                 (match-string 3 cur_line)))
+        ((string-match "/\\(supersolver\\)/\\(scenario\\)/\\([[:word:]_]+\\)" cur_line)
          (xplan/jump-url-handler (match-string 1 cur_line)
                                  (concat "req_" (match-string 2 cur_line) ".py")
                                  (match-string 3 cur_line)))
