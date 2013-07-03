@@ -15,6 +15,13 @@
     (let ((line (bounds-of-thing-at-point 'line)))
       (delete-trailing-whitespace (car line) (cdr line)))))
 
+(defun tom/mark-current-line ()
+  "Mark (select) the current line. (e.g. for subsequent fill-paragraph)"
+  (interactive)
+  (let ((line (bounds-of-thing-at-point 'line)))
+    (set-mark (car line))
+    (goto-char (1- (cdr line)))))
+
 ;; toggle quotes
 (defun tom/toggle-quotes ()
   "Toggle single quoted string to double or vice versa, and
