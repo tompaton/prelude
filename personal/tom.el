@@ -4,6 +4,7 @@
 
 ;; install packages
 (prelude-ensure-module-deps '(bm
+                              yasnippet
                               dsvn
                               expand-region
                               highlight-symbol
@@ -264,3 +265,12 @@
     (message "Loading local configuration files in %s..." local-el)
     (load-file local-el)))
 
+;; this was removed from prelude
+(require 'yasnippet)
+(defvar personal-snippets-dir (expand-file-name "snippets" prelude-personal-dir))
+(add-to-list 'yas-snippet-dirs personal-snippets-dir)
+(yas-global-mode 1)
+
+;; insert new lines, a bit like vi
+(global-set-key (kbd "M-o") 'prelude-smart-open-line)
+(global-set-key (kbd "M-O") 'prelude-smart-open-line-above)
