@@ -27,6 +27,3 @@
 
 ;; don't want "emacs Prelude - " in the taskbar, the icon & buffer name are sufficient
 (setq frame-title-format (cdddr frame-title-format))
-
-;; smartparens key bindings trample on selection/movement and don't work in python-mode
-(smartparens-global-mode -1)

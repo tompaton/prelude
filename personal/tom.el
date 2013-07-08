@@ -274,3 +274,13 @@
 ;; insert new lines, a bit like vi
 (global-set-key (kbd "M-o") 'prelude-smart-open-line)
 (global-set-key (kbd "M-O") 'prelude-smart-open-line-above)
+
+;; smartparens
+;; smartparens key bindings trample on selection/movement and don't work in python-mode
+(require 'smartparens)
+(define-key sp-keymap (kbd "C-<right>") nil)
+(define-key sp-keymap (kbd "C-<left>") nil)
+(define-key sp-keymap (kbd "C-M-<left>") nil)
+(define-key sp-keymap (kbd "C-M-<right>") nil)
+(define-key sp-keymap (kbd "M-<up>") nil)
+(define-key sp-keymap (kbd "M-<down>") nil)
