@@ -285,3 +285,4 @@
 (define-key sp-keymap (kbd "M-<up>") nil)
 (define-key sp-keymap (kbd "M-<down>") nil)
 (define-key sp-keymap (kbd "M-r") nil)
+(define-key sp-keymap (kbd "M-s") nil)
