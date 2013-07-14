@@ -9,6 +9,8 @@
 
 ;; quitting by mistake is really annoying, M-x save-buffers-kill-terminal
 (global-set-key (kbd "C-x C-c") nil)
+;; as is minimizing window
+(global-set-key (kbd "C-z") nil)
 
 ;; no point hamstringing myself by hiding the menu
 (menu-bar-mode t)
@@ -27,4 +29,3 @@
 
 ;; don't want "emacs Prelude - " in the taskbar, the icon & buffer name are sufficient
 (setq frame-title-format (cdddr frame-title-format))
-
