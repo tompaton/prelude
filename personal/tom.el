@@ -4,6 +4,7 @@
 
 ;; install packages
 (prelude-ensure-module-deps '(bm
+                              yasnippet
                               dsvn
                               expand-region
                               highlight-symbol
@@ -124,6 +125,7 @@
 ;; expand selection
 (require 'expand-region)
 (global-set-key (kbd "C-=") 'er/expand-region)
+(global-set-key (kbd "C-c =") 'tom/mark-current-line)
 
 ;; multiple cursors
 (require 'multiple-cursors)
@@ -263,3 +265,24 @@
     (message "Loading local configuration files in %s..." local-el)
     (load-file local-el)))
 
+;; this was removed from prelude
+(require 'yasnippet)
+(defvar personal-snippets-dir (expand-file-name "snippets" prelude-personal-dir))
+(add-to-list 'yas-snippet-dirs personal-snippets-dir)
+(yas-global-mode 1)
+
+;; insert new lines, a bit like vi
+(global-set-key (kbd "M-o") 'prelude-smart-open-line)
+(global-set-key (kbd "M-O") 'prelude-smart-open-line-above)
+
+;; smartparens
+;; smartparens key bindings trample on selection/movement and don't work in python-mode
+(require 'smartparens)
+(define-key sp-keymap (kbd "C-<right>") nil)
+(define-key sp-keymap (kbd "C-<left>") nil)
+(define-key sp-keymap (kbd "C-M-<left>") nil)
+(define-key sp-keymap (kbd "C-M-<right>") nil)
+(define-key sp-keymap (kbd "M-<up>") nil)
+(define-key sp-keymap (kbd "M-<down>") nil)
+(define-key sp-keymap (kbd "M-r") nil)
+(define-key sp-keymap (kbd "M-s") nil)
