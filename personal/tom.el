@@ -4,84 +4,30 @@
 
 ;; install packages
 (prelude-ensure-module-deps '(bm
-                              yasnippet
                               dsvn
                               expand-region
                               highlight-symbol
-                              hlinum
                               multiple-cursors
                               smooth-scrolling
                               ack-and-a-half
                               wgrep
                               wgrep-ack
                               browse-kill-ring
-                              kill-ring-search
-                              col-highlight
-                              powerline
-                              fill-column-indicator))
+                              kill-ring-search))
 
 ;; load my utility functions
 (load-file "~/.emacs.d/personal/lib/toms-utils.el")
-
-;; highlight everything in whitespace-mode except long lines
-(require 'whitespace)
-
-(defun tom/customise-whitespace-mode-faces () ; defun so can be called again in meltpaton-pc4.el
-  (setq whitespace-style (quote
-                          (face spaces tabs trailing newline space-before-tab indentation empty space-after-tab space-mark tab-mark newline-mark)))
-  ;; no yellow background on spaces
-  (set-face-attribute 'whitespace-space nil
-                      :background nil)
-  ;; subtler trailing space background
-  (set-face-attribute 'whitespace-trailing nil
-                      :foreground "#F88"
-                      :background nil
-                      :weight 'light)
-  ;; nicer tab & cr indicators
-  (setq whitespace-display-mappings
-        ;; all numbers are Unicode codepoint in decimal
-        '(
-          (space-mark   32 [183] [46])      ; 32 SPACE 「 」, 183 MIDDLE DOT 「·」, 46 FULL STOP 「.」
-          (newline-mark 10 [182 10])        ; 10 LINE FEED
-          (tab-mark      9 [8594 9] [92 9]) ; 9 TAB, 9655 WHITE RIGHT-POINTING TRIANGLE 「▷」
-          ))
-  (setq indicate-empty-lines t))
-
-(tom/customise-whitespace-mode-faces)
-
-(require 'col-highlight)
-(set-face-attribute 'col-highlight nil
-                    :background "honeydew")
 
 (global-set-key (kbd "C-c w") 'delete-trailing-whitespace)
 (global-set-key (kbd "C-c DEL") 'tom/delete-trailing-whitespace-current-line)
 ; delete all spaces around the point
 (global-set-key (kbd "<S-delete>") (lambda () (interactive) (just-one-space 0)))
 
-;; add a vertical line at column 100
-(require 'fill-column-indicator)
-(define-globalized-minor-mode global-fci-mode fci-mode (lambda () (fci-mode 1)))
-(global-fci-mode 1)
-(setq-default fill-column 100)
-(setq-default fci-rule-color "#dddddd")
-
-;; tone down flymake errors and warnings
-;(require 'flymake)
-;(set-face-attribute 'flymake-errline nil
-;                    :background "#ffe8e8")
-
 ;; quick keys to toggle view
 (global-set-key [f5] 'toggle-truncate-lines)
 (global-set-key [f6] 'whitespace-mode)
 (global-set-key [f7] 'highlight-indentation-mode)
 (global-set-key [f8] 'linum-mode)
-
-;; word-wrap by default
-(set-default 'truncate-lines t)
-
-;; show line numbers
-(require 'hlinum)
-(global-linum-mode)
 
 ;; indent after new line
 (global-set-key (kbd "RET") 'newline-and-indent)
@@ -260,48 +206,3 @@
   (when (file-exists-p local-el)
     (message "Loading local configuration files in %s..." local-el)
     (load-file local-el)))
-
-;; this was removed from prelude
-(require 'yasnippet)
-(defvar personal-snippets-dir (expand-file-name "snippets" prelude-personal-dir))
-(add-to-list 'yas-snippet-dirs personal-snippets-dir)
-(yas-global-mode 1)
-
-;; insert new lines, a bit like vi
-(global-set-key (kbd "M-o") 'prelude-smart-open-line)
-(global-set-key (kbd "M-O") 'prelude-smart-open-line-above)
-
-;; smartparens
-;; smartparens key bindings trample on selection/movement and don't work in python-mode
-(require 'smartparens)
-(define-key sp-keymap (kbd "C-<right>") nil)
-(define-key sp-keymap (kbd "C-<left>") nil)
-(define-key sp-keymap (kbd "C-M-<left>") nil)
-(define-key sp-keymap (kbd "C-M-<right>") nil)
-(define-key sp-keymap (kbd "M-<up>") nil)
-(define-key sp-keymap (kbd "M-<down>") nil)
-(define-key sp-keymap (kbd "M-r") nil)
-(define-key sp-keymap (kbd "M-s") nil)
-
-;; powerline
-;; NOTE: on windows, had to delete .elc files in elpa/powerline- folder
-;; to remove incessant "pl/ generating ..." messages
-(require 'powerline)
-;; default colours are way too dark
-(set-face-attribute 'mode-line nil :background "grey95")
-(set-face-attribute 'powerline-active1 nil :background "grey75")
-(set-face-attribute 'powerline-active2 nil :background "grey60")
-(set-face-attribute 'powerline-inactive1 nil :background "grey75")
-(set-face-attribute 'powerline-inactive2 nil :background "grey60")
-;;(powerline-default-theme)
-(tom/powerline-theme)
-
-;; diminish minor modes
-;; only want things like flycheck that show useful info
-(require 'diminish)
-(diminish 'whitespace-mode)
-(diminish 'highlight-symbol-mode)
-(diminish 'smartparens-mode)
-(diminish 'projectile-mode)
-(diminish 'prelude-mode)
-(diminish 'yas-minor-mode)
