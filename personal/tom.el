@@ -145,8 +145,8 @@
 
 ;; indent/outdent region by 4 spaces
 ;; python version loses the marked region so only works once
-(global-set-key (kbd "C-.") [?\C-u    ?4 ?\M-x ?i ?n ?d ?e ?n ?t ?- ?r ?i ?g ?i ?d ?l ?y return])
-(global-set-key (kbd "C-,") [?\C-u ?- ?4 ?\M-x ?i ?n ?d ?e ?n ?t ?- ?r ?i ?g ?i ?d ?l ?y return])
+(global-set-key (kbd "C-.") (lambda () (interactive) (indent-rigidly (region-beginning) (region-end) 4)))
+(global-set-key (kbd "C-,") (lambda () (interactive) (indent-rigidly (region-beginning) (region-end) -4)))
 
 ;; toggle quotes
 (global-set-key (kbd "C-c '") 'tom/toggle-quotes)
