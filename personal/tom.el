@@ -17,6 +17,7 @@
                               browse-kill-ring
                               kill-ring-search
                               col-highlight
+                              powerline
                               fill-column-indicator))
 
 ;; load my utility functions
@@ -110,6 +111,7 @@
                                                       (bm-toggle))))
 
 ;; highlight symbol under point and alt-left/right to navigate between references
+(require 'highlight-symbol)
 (setq highlight-symbol-idle-delay 0.2)
 (setq highlight-symbol-colors '("yellow" "cyan" "SpringGreen1"))
 
@@ -286,3 +288,26 @@
 (define-key sp-keymap (kbd "M-<down>") nil)
 (define-key sp-keymap (kbd "M-r") nil)
 (define-key sp-keymap (kbd "M-s") nil)
+
+;; powerline
+;; NOTE: on windows, had to delete .elc files in elpa/powerline- folder
+;; to remove incessant "pl/ generating ..." messages
+(require 'powerline)
+;; default colours are way too dark
+(set-face-attribute 'mode-line nil :background "grey95")
+(set-face-attribute 'powerline-active1 nil :background "grey75")
+(set-face-attribute 'powerline-active2 nil :background "grey60")
+(set-face-attribute 'powerline-inactive1 nil :background "grey75")
+(set-face-attribute 'powerline-inactive2 nil :background "grey60")
+;;(powerline-default-theme)
+(tom/powerline-theme)
+
+;; diminish minor modes
+;; only want things like flycheck that show useful info
+(require 'diminish)
+(diminish 'whitespace-mode)
+(diminish 'highlight-symbol-mode)
+(diminish 'smartparens-mode)
+(diminish 'projectile-mode)
+(diminish 'prelude-mode)
+(diminish 'yas-minor-mode)
