@@ -134,3 +134,4 @@
 (diminish 'prelude-mode)
 (require 'yasnippet)
 (diminish 'yas-minor-mode)
+(diminish 'abbrev-mode)
