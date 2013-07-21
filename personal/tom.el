@@ -286,3 +286,6 @@
 (define-key sp-keymap (kbd "M-<down>") nil)
 (define-key sp-keymap (kbd "M-r") nil)
 (define-key sp-keymap (kbd "M-s") nil)
+
+;; auto escaping inside strings doesn't seem helpful anywhere
+(setq sp-autoescape-string-quote nil)
