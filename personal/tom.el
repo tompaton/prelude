@@ -114,10 +114,6 @@
                                 (interactive)
                                 (search-forward ")")))
 
-;; These mess with viper, try and learn to use M-SPC and M-\ instead
-;;(key-chord-define-global "kk" 'just-one-space)
-;;(key-chord-define-global "KK" 'delete-horizontal-space)
-
 ;; helm
 (require 'helm-files)
 (setq helm-idle-delay 0.1)
@@ -201,10 +197,6 @@
 ;; better find-tag keybindings
 (global-set-key (kbd "M-.") 'tom/find-tag)
 (global-set-key (kbd "M-,") 'pop-tag-mark)
-
-;; VI movement/editing keys are pretty nice really
-(global-set-key (kbd "C-z") 'toggle-viper-mode)
-;; TODO: bind C-g to escape
 
 ;; load config from local/ folder based on current machine name
 (let ((local-el (concat "~/.emacs.d/personal/local/" system-name ".el")))
