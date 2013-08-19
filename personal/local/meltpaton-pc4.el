@@ -79,7 +79,10 @@
 ;; project specific navigation
 (load "~/.emacs.d/personal/lib/xplan.el")
 (global-set-key (kbd "C-c j") 'xplan/jump)
-(global-set-key (kbd "C-c Jo") (lambda () (interactive) (xplan/jump t))) ; other frame
+(global-set-key (kbd "C-c Jo") (lambda () (interactive) (xplan/jump 1))) ; other frame
+(global-set-key (kbd "C-c JO") (lambda () (interactive) (xplan/jump 1) (previous-multiframe-window))) ; show in other frame, keep focus in current frame
+(global-set-key (kbd "C-c Jp") (lambda () (interactive) (xplan/jump -1))) ; previous frame
+(global-set-key (kbd "C-c JP") (lambda () (interactive) (xplan/jump -1) (next-multiframe-window))) ; show in previous frame, keep focus in current frame
 (global-set-key (kbd "C-c Jr") 'xplan/jump-rpc)
 (global-set-key (kbd "C-c Ju") 'xplan/jump-url)
 (global-set-key (kbd "C-c Jb") 'xplan/jump-branch)
