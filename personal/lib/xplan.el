@@ -135,9 +135,9 @@ Returns the normalized filename (minus xplan base).
 Follow python imports, urls to request handlers, rpc calls etc."
      (interactive)
      (let ((cur_line (thing-at-point 'line)))
-       (cond ((= OTHER_FRAME 1)
+       (cond ((eq OTHER_FRAME 1)
               (next-multiframe-window))
-             ((= OTHER_FRAME -1)
+             ((eq OTHER_FRAME -1)
               (previous-multiframe-window)))
        (cond
 
