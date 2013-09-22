@@ -80,7 +80,8 @@
       '(python-electric-colon
         sgml-slash
         python-backspace
-        backward-sexp))
+        backward-sexp
+        sp--self-insert-command))
 (setq mc/cmds-to-run-once
       '(handle-switch-frame
         previous-multiframe-window))
