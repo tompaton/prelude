@@ -45,7 +45,7 @@
     expand-region flx-ido flycheck gist
     git-commit-mode gitconfig-mode gitignore-mode grizzl
     guru-mode helm helm-projectile ido-ubiquitous
-    key-chord magit rainbow-mode
+    key-chord magit move-text rainbow-mode
     smartparens smex undo-tree
     volatile-highlights zenburn-theme)
   "A list of packages to ensure are installed at launch.")
@@ -106,6 +106,7 @@ PACKAGE is installed only if not already present.  The file is opened in MODE."
     ("\\.markdown\\'" markdown-mode markdown-mode)
     ("\\.md\\'" markdown-mode markdown-mode)
     ("\\.ml\\'" tuareg tuareg-mode)
+    ("\\.pp\\'" puppet-mode puppet-mode)
     ("\\.php\\'" php-mode php-mode)
     ("PKGBUILD\\'" pkgbuild-mode pkgbuild-mode)
     ("\\.sass\\'" sass-mode sass-mode)
