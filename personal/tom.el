@@ -190,13 +190,17 @@
 ;; raise-frame method is annoying
 (setq ido-default-buffer-method 'selected-window)
 
+;; default ediff side by side
+(setq ediff-split-window-function 'split-window-horizontally)
+
 ;; i can never remember the name/key for this
 (defun unix-eol ()
   (interactive)
   (set-buffer-file-coding-system 'utf-8-unix))
 
 ;; better find-tag keybindings
-(global-set-key (kbd "M-.") 'tom/find-tag)
+;(global-set-key (kbd "M-.") 'tom/find-tag)
+(global-set-key (kbd "M-.") 'helm-etags-select)
 (global-set-key (kbd "M-,") 'pop-tag-mark)
 
 ;; load config from local/ folder based on current machine name
