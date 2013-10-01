@@ -100,8 +100,8 @@
 
                         ("Editing"
                          ["Insert empty line" prelude-insert-empty-line]
-                         ["Move line up" prelude-move-line-up]
-                         ["Move line down" prelude-move-line-down]
+                         ["Move line up" move-text-up]
+                         ["Move line down" move-text-down]
                          ["Indent buffer" prelude-indent-buffer]
                          ["Indent buffer or region" prelude-indent-buffer-or-region]
                          ["Duplicate line or region" prelude-duplicate-current-line-or-region]
