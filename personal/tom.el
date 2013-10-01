@@ -140,8 +140,8 @@
 (require 'smooth-scrolling)
 
 ;; better keys for move line up/down
-(global-set-key (kbd "<M-up>") 'prelude-move-line-up)
-(global-set-key (kbd "<M-down>") 'prelude-move-line-down)
+(global-set-key (kbd "<M-up>") 'move-text-up)
+(global-set-key (kbd "<M-down>") 'move-text-down)
 
 ;; shift-arrows shouldn't change windows
 (load "shift_mark")
@@ -202,6 +202,9 @@
 ;(global-set-key (kbd "M-.") 'tom/find-tag)
 (global-set-key (kbd "M-.") 'helm-etags-select)
 (global-set-key (kbd "M-,") 'pop-tag-mark)
+
+(require 'anzu)
+(global-anzu-mode +1)
 
 ;; load config from local/ folder based on current machine name
 (let ((local-el (concat "~/.emacs.d/personal/local/" system-name ".el")))
