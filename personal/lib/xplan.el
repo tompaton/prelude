@@ -135,6 +135,8 @@ Returns the normalized filename (minus xplan base).
 Follow python imports, urls to request handlers, rpc calls etc."
      (interactive)
      (let ((cur_line (thing-at-point 'line)))
+       ;; NOTE: changing frames means xplan/branch-base may not be the same as the current buffer,
+       ;; so this won't always work.
        (cond ((eq OTHER_FRAME 1)
               (next-multiframe-window))
              ((eq OTHER_FRAME -1)
