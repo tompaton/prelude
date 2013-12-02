@@ -126,7 +126,7 @@ With a prefix ARG open line above the current line."
 (defun prelude-kill-whole-line (&optional arg)
   "A simple wrapper around command `kill-whole-line' that respects indentation.
 Passes ARG to command `kill-whole-line' when provided."
-  (interactive "P")
+  (interactive "p")
   (kill-whole-line arg)
   (back-to-indentation))
 
@@ -405,7 +405,6 @@ Doesn't mess with special buffers."
     "Press <jj> quickly to jump to the beginning of a visible word."
     "Press <jk> quickly to jump to a visible character."
     "Press <jl> quickly to jump to a visible line."
-    "Press <C-c h> to navigate a project in Helm."
     "Press <C-c g> to search in Google."
     "Press <C-c G> to search in GitHub."
     "Press <C-c y> to search in YouTube."
@@ -424,7 +423,7 @@ Doesn't mess with special buffers."
     "Press <f12> to toggle the menu bar."
     "Explore the Tools->Prelude menu to find out about some of Prelude extensions to Emacs."
     "Access the official Emacs manual by pressing <C-h r>."
-    "Visit WikEmacs at http://wikemacs.org to find out even more about Emacs."))
+    "Visit the EmacsWiki at http://emacswiki.org to find out even more about Emacs."))
 
 (defun prelude-tip-of-the-day ()
   "Display a random entry from `prelude-tips'."
@@ -450,10 +449,14 @@ Doesn't mess with special buffers."
   (exchange-point-and-mark)
   (deactivate-mark nil))
 
+(require 'epl)
+
 (defun prelude-update ()
   "Update Prelude to its latest version."
   (interactive)
   (when (y-or-n-p "Do you want to update Prelude? ")
+    (message "Updating installed packages...")
+    (epl-upgrade)
     (message "Updating Prelude...")
     (cd prelude-dir)
     (shell-command "git pull")
