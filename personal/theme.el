@@ -137,3 +137,8 @@
 (diminish 'abbrev-mode)
 (require 'anzu)
 (diminish 'anzu-mode)
+
+;; make helm current line (C-z) match selection
+(custom-set-faces
+ '(helm-selection-line ((t (:background "#b5ffd1" :underline nil))))
+ '(magit-item-highlight ((t (:background "DarkSeaGreen1")))))

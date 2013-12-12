@@ -52,3 +52,7 @@
 ;; insert new lines, a bit like vi
 (global-set-key (kbd "M-o") 'prelude-smart-open-line)
 (global-set-key (kbd "M-O") 'prelude-smart-open-line-above)
+
+;; helm C-x c i broken
+(setq old-overridding-local-map nil)
+

@@ -211,3 +211,18 @@
   (when (file-exists-p local-el)
     (message "Loading local configuration files in %s..." local-el)
     (load-file local-el)))
+
+;; enable semantic mode so c-x c i is reasonably fast
+(semantic-mode 1)
+(add-to-list 'semantic-inhibit-functions
+             (lambda () (member major-mode '(html-mode mmm-mode))))
+(setq semantic-idle-scheduler-idle-time 2)
+(setq semantic-idle-scheduler-work-idle-time 120)
+(setq semantic-idle-scheduler-max-buffer-size 100000)
+
+;; no flycheck in html as it's choking too often
+(eval-after-load 'flycheck '(setq flycheck-checkers (delq 'html-tidy flycheck-checkers)))
+
+(setq flycheck-check-syntax-automatically '(save mode-enabled))
+(global-flycheck-mode -1)
+
