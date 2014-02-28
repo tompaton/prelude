@@ -15,7 +15,7 @@
 (require 'fill-column-indicator)
 (define-globalized-minor-mode global-fci-mode fci-mode (lambda () (fci-mode 1)))
 (global-fci-mode 1)
-(setq-default fill-column 100)
+(setq-default fill-column 80)
 (setq-default fci-rule-color "#dddddd")
 
 ;; tone down flymake errors and warnings

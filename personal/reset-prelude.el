@@ -56,3 +56,5 @@
 ;; helm C-x c i broken
 (setq old-overridding-local-map nil)
 
+;; this is crashing emacs?
+(projectile-global-mode -1)

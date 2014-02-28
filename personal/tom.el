@@ -99,7 +99,7 @@
 (global-set-key (kbd "C-c '") 'tom/toggle-quotes)
 
 ;; split line on commas and indent (e.g. split python function params to separate lines)
-(global-set-key (kbd "C-c ,") 'tom/split-line-on-comma-and-indent)
+(global-set-key (kbd "C-c C-,") 'tom/split-line-on-comma-and-indent)
 
 ;; jump to next = character
 (key-chord-define-global "j=" (lambda ()
@@ -203,14 +203,11 @@
 (global-set-key (kbd "M-.") 'helm-etags-select)
 (global-set-key (kbd "M-,") 'pop-tag-mark)
 
+;; better helm-occur binding
+(global-set-key (kbd "C-x c C-o") 'helm-occur)
+
 (require 'anzu)
 (global-anzu-mode +1)
-
-;; load config from local/ folder based on current machine name
-(let ((local-el (concat "~/.emacs.d/personal/local/" system-name ".el")))
-  (when (file-exists-p local-el)
-    (message "Loading local configuration files in %s..." local-el)
-    (load-file local-el)))
 
 ;; enable semantic mode so c-x c i is reasonably fast
 (semantic-mode 1)
@@ -226,3 +223,8 @@
 (setq flycheck-check-syntax-automatically '(save mode-enabled))
 (global-flycheck-mode -1)
 
+;; load config from local/ folder based on current machine name
+(let ((local-el (concat "~/.emacs.d/personal/local/" system-name ".el")))
+  (when (file-exists-p local-el)
+    (message "Loading local configuration files in %s..." local-el)
+    (load-file local-el)))
