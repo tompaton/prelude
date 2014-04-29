@@ -129,6 +129,138 @@ Returns the normalized filename (minus xplan base).
                                    (concat "req_" (nth 1 bits) ".py")
                                    (nth 2 bits))))))
 
+
+(defun xplan/jump-test-pyflakes-error (cur_line)
+  "test cur_line for a pyflakes warning/error to jump to"
+  (cond
+   ;; pyflakes warning/error
+   ((string-match "^\\([a-zA-Z0-9_\\./]+\\):\\([0-9]+\\):" cur_line)
+    (let ((file (match-string 1 cur_line))
+          (line (string-to-number (match-string 2 cur_line))))
+      (message "xplan/jump: file:line:msg --> %s (%d)"
+               (xplan/jump-file "" file)
+               (xplan/jump-line-number line))))
+   ))
+
+(defun xplan/jump-test-traceback-error (cur_line)
+  "test cur_line for an traceback error line to jump to"
+  (cond
+   ;; Traceback error line
+   ((string-match "^[ ]+File \\\"\\(.+\\)\\\", line \\([0-9]+\\)," cur_line)
+    (let ((file (match-string 1 cur_line))
+          (line (string-to-number (match-string 2 cur_line))))
+      (message "xplan/jump: traceback %s (%d)"
+               (find-file file)
+               (xplan/jump-line-number line))))
+   ))
+
+(defun xplan/jump-test-rpc-call (cur_line)
+  "test cur_line for an rpc call to jump to"
+  (cond
+   ;; RPC calls
+   ((string-match "\\(?:callJSON\\|XMLRPC\\.call\\)(['\\\"]\\([[:word:]_\\.]+\\)\\.\\([[:word:]_]+\\)['\\\"]" cur_line)
+    (xplan/jump-rpc (match-string 1 cur_line)
+                    (match-string 2 cur_line)))
+   ))
+
+(defun xplan/jump-test-html-template (cur_line)
+  "test cur_line for a html template to jump to"
+  (cond
+   ;; html template, / separated path
+   ((string-match "\\(get_popup_template\\|get_full_page_popup_template\\|init_engage_tpl\\|Template\\)(['\"]\\(.+\\)['\"]" cur_line)
+    (message "xplan/jump: get_popup_template --> %s"
+             (xplan/jump-file "data\\ihtml\\" (match-string 2 cur_line) t))) ; create if necessary
+
+   ;; html template, path in list/tuple
+   ;; getTPO(request, [...path...])
+   ((string-match "\\_<\\(get\\w*TPO\\)([[:word:]_]+,\\W*\\[\\([^]]+\\)\\]" cur_line)
+    (message "xplan/jump: Template --> %s"
+             (xplan/jump-file "data\\ihtml\\" (match-string 2 cur_line) t))) ; create if necessary
+   ;; getSimpleTPO([...path...])
+   ((string-match "\\_<\\(get\\w*TPO\\|get_.+_template\\|Template\\|getMainFrame\\)(\\[\\([^]]+\\)\\]" cur_line)
+    (message "xplan/jump: Template --> %s"
+             (xplan/jump-file "data\\ihtml\\" (match-string 2 cur_line) t))) ; create if necessary
+   ;; tpo.setFile('name', [...path...])
+   ((string-match "\\_<\\(setFile\\)(['\"][[:word:]_]+['\"],\\W*\\[\\([^]]+\\)\\]" cur_line)
+    (message "xplan/jump: Template --> %s"
+             (xplan/jump-file "data\\ihtml\\" (match-string 2 cur_line) t))) ; create if necessary
+   ))
+
+(defun xplan/jump-test-include-html-template (cur_line)
+  "test cur_line for an html include to jump to"
+  (cond
+   ;; <:include html_template:>
+   ((string-match "<:include \\(.+\\):>" cur_line)
+    (message "xplan/jump: include --> %s"
+             (xplan/jump-file "data\\ihtml\\" (match-string 1 cur_line) t))) ; create if necessary
+   ))
+
+(defun xplan/jump-test-add-js (cur_line)
+  "test cur_line for a javascript dependency to jump to"
+  (cond
+   ;; $ADD_JAVASCRIPT
+   ((string-match "$ADD_JAVASCRIPT(['\"]\\(.+\\)['\"])" cur_line)
+    (message "xplan/jump: ADD_JAVASCRIPT --> %s"
+             (xplan/jump-file "data\\wwwroot\\js\\" (match-string 1 cur_line))))
+   ;; Dependency.addJS
+   ((string-match "Dependency.addJS(['\"]\\(.+\\)['\"])" cur_line)
+    (message "xplan/jump: Dependency.addJS --> %s"
+             (xplan/jump-file "data\\wwwroot\\js\\"
+                              (concat (match-string 1 cur_line) ".js"))))
+   ))
+
+(defun xplan/jump-test-add-css (cur_line)
+  "test cur_line for a css dependency to jump to"
+  (cond
+   ;; $ADD_CSS
+   ((string-match "$ADD_CSS(['\"]\\(.+\\)['\"])" cur_line)
+    (message "xplan/jump: ADD_CSS --> %s"
+             (xplan/jump-file "data\\wwwroot\\css\\" (match-string 1 cur_line))))
+   ))
+
+(defun xplan/jump-test-url (cur_line)
+  "test cur_line for a url to jump to"
+  (cond
+   ;; url --> protocol req handler
+   ((string-match "/\\(sysadmin\\)/\\(supersolver\\)/\\([[:word:]_]+\\)" cur_line)
+    (xplan/jump-url-handler (match-string 1 cur_line)
+                            (concat "req_" (match-string 2 cur_line) ".py")
+                            (match-string 3 cur_line)))
+   ((string-match "/\\(supersolver\\)/\\(scenario\\)/\\([[:word:]_]+\\)" cur_line)
+    (xplan/jump-url-handler (match-string 1 cur_line)
+                            (concat "req_" (match-string 2 cur_line) ".py")
+                            (match-string 3 cur_line)))
+   ((string-match "/\\(iqm\\+/rr\\|supersolver\\)/\\([[:word:]_]+\\)" cur_line)
+    (xplan/jump-url-handler (match-string 1 cur_line)
+                            "protocol.py"
+                            (match-string 2 cur_line)))
+   ))
+
+(defun xplan/jump-test-python-import (cur_line)
+  "test cur_line for a python import to jump to"
+  (cond
+   ;; import class/function from module
+   ;; import module from path
+   ((string-match "from \\(xpt\\..+\\) import \\(.+\\)" cur_line)
+    (let ((module (match-string 1 cur_line))
+          (symbol (match-string 2 cur_line)))
+      (let ((module2 (concat module "." symbol)))
+        (if (xplan/is-file "src\\py\\" (xplan/get-file-from-module module2))
+            (message "xplan/jump: import --> %s"
+                     (xplan/jump-file "src\\py\\" (xplan/get-file-from-module module2)))
+          (message "xplan/jump: import --> %s :: %s"
+                   (xplan/jump-file "src\\py\\" (xplan/get-file-from-module module))
+                   (xplan/jump-method symbol "\\(def\\|class\\)"))))))
+   ))
+
+(defun xplan/join-lines (sentence)
+  (with-temp-buffer
+    (insert sentence)
+    (goto-char (point-min))
+    (while (search-forward "\n" nil t)
+      (replace-match ""))
+    (buffer-string)))
+
 (defun xplan/jump (&optional OTHER_FRAME)
      "Jump to the appropriate source file/line based on the current line
 
@@ -142,98 +274,28 @@ Follow python imports, urls to request handlers, rpc calls etc."
              ((eq OTHER_FRAME -1)
               (previous-multiframe-window)))
        (cond
-
-        ;; pyflakes warning/error
-        ((string-match "^\\([a-zA-Z0-9_\\./]+\\):\\([0-9]+\\):" cur_line)
-         (let ((file (match-string 1 cur_line))
-               (line (string-to-number (match-string 2 cur_line))))
-           (message "xplan/jump: file:line:msg --> %s (%d)"
-                    (xplan/jump-file "" file)
-                    (xplan/jump-line-number line))))
-
-        ;; Traceback error line
-        ((string-match "^[ ]+File \\\"\\(.+\\)\\\", line \\([0-9]+\\)," cur_line)
-         (let ((file (match-string 1 cur_line))
-               (line (string-to-number (match-string 2 cur_line))))
-           (message "xplan/jump: traceback %s (%d)"
-                    (find-file file)
-                    (xplan/jump-line-number line))))
-
-        ;; RPC calls
-        ((string-match "\\(?:callJSON\\|XMLRPC\\.call\\)(['\\\"]\\([[:word:]_\\.]+\\)\\.\\([[:word:]_]+\\)['\\\"]" cur_line)
-         (xplan/jump-rpc (match-string 1 cur_line)
-                         (match-string 2 cur_line)))
-
-        ;; html template, / separated path
-        ((string-match "\\(get_popup_template\\|get_full_page_popup_template\\|init_engage_tpl\\|Template\\)(['\"]\\(.+\\)['\"]" cur_line)
-         (message "xplan/jump: get_popup_template --> %s"
-                  (xplan/jump-file "data\\ihtml\\" (match-string 2 cur_line) t))) ; create if necessary
-
-        ;; html template, path in list/tuple
-        ;; getTPO(request, [...path...])
-        ((string-match "\\_<\\(get\\w*TPO\\)([[:word:]_]+,\\W*\\[\\([^]]+\\)\\]" cur_line)
-         (message "xplan/jump: Template --> %s"
-                  (xplan/jump-file "data\\ihtml\\" (match-string 2 cur_line) t))) ; create if necessary
-        ;; getSimpleTPO([...path...])
-        ((string-match "\\_<\\(get\\w*TPO\\|get_.+_template\\|Template\\|getMainFrame\\)(\\[\\([^]]+\\)\\]" cur_line)
-         (message "xplan/jump: Template --> %s"
-                  (xplan/jump-file "data\\ihtml\\" (match-string 2 cur_line) t))) ; create if necessary
-        ;; tpo.setFile('name', [...path...])
-        ((string-match "\\_<\\(setFile\\)(['\"][[:word:]_]+['\"],\\W*\\[\\([^]]+\\)\\]" cur_line)
-         (message "xplan/jump: Template --> %s"
-                  (xplan/jump-file "data\\ihtml\\" (match-string 2 cur_line) t))) ; create if necessary
-
-        ;; <:include html_template:>
-        ((string-match "<:include \\(.+\\):>" cur_line)
-         (message "xplan/jump: include --> %s"
-                  (xplan/jump-file "data\\ihtml\\" (match-string 1 cur_line) t))) ; create if necessary
-
-        ;; $ADD_JAVASCRIPT
-        ((string-match "$ADD_JAVASCRIPT(['\"]\\(.+\\)['\"])" cur_line)
-         (message "xplan/jump: ADD_JAVASCRIPT --> %s"
-                  (xplan/jump-file "data\\wwwroot\\js\\" (match-string 1 cur_line))))
-        ;; Dependency.addJS
-        ((string-match "Dependency.addJS(['\"]\\(.+\\)['\"])" cur_line)
-         (message "xplan/jump: Dependency.addJS --> %s"
-                  (xplan/jump-file "data\\wwwroot\\js\\"
-                                   (concat (match-string 1 cur_line) ".js"))))
-
-        ;; $ADD_CSS
-        ((string-match "$ADD_CSS(['\"]\\(.+\\)['\"])" cur_line)
-         (message "xplan/jump: ADD_CSS --> %s"
-                  (xplan/jump-file "data\\wwwroot\\css\\" (match-string 1 cur_line))))
-
-        ;; url --> protocol req handler
-        ((string-match "/\\(sysadmin\\)/\\(supersolver\\)/\\([[:word:]_]+\\)" cur_line)
-         (xplan/jump-url-handler (match-string 1 cur_line)
-                                 (concat "req_" (match-string 2 cur_line) ".py")
-                                 (match-string 3 cur_line)))
-        ((string-match "/\\(supersolver\\)/\\(scenario\\)/\\([[:word:]_]+\\)" cur_line)
-         (xplan/jump-url-handler (match-string 1 cur_line)
-                                 (concat "req_" (match-string 2 cur_line) ".py")
-                                 (match-string 3 cur_line)))
-        ((string-match "/\\(iqm\\+/rr\\|supersolver\\)/\\([[:word:]_]+\\)" cur_line)
-         (xplan/jump-url-handler (match-string 1 cur_line)
-                                 "protocol.py"
-                                 (match-string 2 cur_line)))
-
-        ;; import class/function from module
-        ;; import module from path
-        ((string-match "from \\(xpt\\..+\\) import \\(.+\\)" cur_line)
-         (let ((module (match-string 1 cur_line))
-               (symbol (match-string 2 cur_line)))
-           (let ((module2 (concat module "." symbol)))
-             (if (xplan/is-file "src\\py\\" (xplan/get-file-from-module module2))
-                 (message "xplan/jump: import --> %s"
-                          (xplan/jump-file "src\\py\\" (xplan/get-file-from-module module2)))
-               (message "xplan/jump: import --> %s :: %s"
-                        (xplan/jump-file "src\\py\\" (xplan/get-file-from-module module))
-                        (xplan/jump-method symbol "\\(def\\|class\\)"))))))
+        ((xplan/jump-test-pyflakes-error cur_line))
+        ((xplan/jump-test-traceback-error cur_line))
+        ((xplan/jump-test-rpc-call cur_line))
+        ((xplan/jump-test-html-template cur_line))
+        ((xplan/jump-test-include-html-template cur_line))
+        ((xplan/jump-test-add-js cur_line))
+        ((xplan/jump-test-add-css cur_line))
+        ((xplan/jump-test-url cur_line))
+        ((xplan/jump-test-python-import cur_line))
 
         ;; TODO: fall through to jump to tag, matching () etc.?
 
         (t
-         (message "xplan/jump: match not found")))))
+         ;; attempt to match in a multi-line expression
+         (let ((cur_line (xplan/join-lines (thing-at-point 'sentence))))
+           (cond
+            ((xplan/jump-test-html-template cur_line))
+
+            (t
+             (message "xplan/jump: match not found")))
+           )))
+       ))
 
 (defun xplan/jump-branch (branch)
   "Jump to the current file in the other branch
