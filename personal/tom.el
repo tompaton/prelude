@@ -140,8 +140,7 @@
 (require 'smooth-scrolling)
 
 ;; better keys for move line up/down
-(global-set-key (kbd "<M-up>") 'move-text-up)
-(global-set-key (kbd "<M-down>") 'move-text-down)
+(move-text-default-bindings)
 
 ;; shift-arrows shouldn't change windows
 (load "shift_mark")
