@@ -291,6 +291,7 @@ Follow python imports, urls to request handlers, rpc calls etc."
          (let ((cur_line (xplan/join-lines (thing-at-point 'sentence))))
            (cond
             ((xplan/jump-test-html-template cur_line))
+            ((xplan/jump-test-rpc-call cur_line))
 
             (t
              (message "xplan/jump: match not found")))
