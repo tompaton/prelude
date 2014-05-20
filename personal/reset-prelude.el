@@ -25,6 +25,10 @@
 ;; auto escaping inside strings doesn't seem helpful anywhere
 (setq sp-autoescape-string-quote nil)
 
+;; C-c keybindings clash with my xplan commands
+(global-set-key (kbd "s-.") nil)
+(global-set-key (kbd "C-c J") nil)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; philosophical differences
 
