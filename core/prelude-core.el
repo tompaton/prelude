@@ -37,17 +37,22 @@
 
 (defun prelude-open-with (arg)
   "Open visited file in default external program.
+When in dired mode, open file under the cursor.
 
 With a prefix ARG always prompt for command to use."
   (interactive "P")
-  (when buffer-file-name
-    (start-process "prelude-open-with-process"
-                   "*prelude-open-with-output*"
-                   (cond
-                    ((and (not arg) (eq system-type 'darwin)) "open")
-                    ((and (not arg) (member system-type '(gnu gnu/linux gnu/kfreebsd))) "xdg-open")
-                    (t (read-shell-command "Open current file with: ")))
-                   (shell-quote-argument buffer-file-name))))
+  (let ((current-file-name
+         (if (eq major-mode 'dired-mode)
+             (dired-get-file-for-visit)
+           buffer-file-name)))
+    (when current-file-name
+        (start-process "prelude-open-with-process"
+                       "*prelude-open-with-output*"
+                       (cond
+                        ((and (not arg) (eq system-type 'darwin)) "open")
+                        ((and (not arg) (member system-type '(gnu gnu/linux gnu/kfreebsd))) "xdg-open")
+                        (t (read-shell-command "Open current file with: ")))
+                       (shell-quote-argument current-file-name)))))
 
 (defun prelude-buffer-mode (buffer-or-name)
   "Retrieve the `major-mode' of BUFFER-OR-NAME."
@@ -181,7 +186,8 @@ point reaches the beginning or end of the buffer, stop there."
   (interactive)
   (save-excursion
     (goto-char (point-min))
-    (while (re-search-forward "TODO:" nil t)
+    (while (re-search-forward
+            (format "[[:space:]]*%s+[[:space:]]*TODO:" comment-start) nil t)
       (let ((overlay (make-overlay (- (point) 5) (point))))
         (overlay-put overlay
                      'before-string
@@ -198,50 +204,51 @@ point reaches the beginning or end of the buffer, stop there."
       (kill-new filename)
       (message "Copied buffer file name '%s' to the clipboard." filename))))
 
+(defun prelude-get-positions-of-line-or-region ()
+  "Return positions (beg . end) of the current line
+or region."
+  (let (beg end)
+    (if (and mark-active (> (point) (mark)))
+        (exchange-point-and-mark))
+    (setq beg (line-beginning-position))
+    (if mark-active
+        (exchange-point-and-mark))
+    (setq end (line-end-position))
+    (cons beg end)))
+
 (defun prelude-duplicate-current-line-or-region (arg)
   "Duplicates the current line or region ARG times.
 If there's no region, the current line will be duplicated.  However, if
 there's a region, all lines that region covers will be duplicated."
   (interactive "p")
-  (let (beg end (origin (point)))
-    (if (and mark-active (> (point) (mark)))
-        (exchange-point-and-mark))
-    (setq beg (line-beginning-position))
-    (if mark-active
-        (exchange-point-and-mark))
-    (setq end (line-end-position))
-    (let ((region (buffer-substring-no-properties beg end)))
-      (-dotimes arg
-                (lambda (n)
-                  (goto-char end)
-                  (newline)
-                  (insert region)
-                  (setq end (point))))
-      (goto-char (+ origin (* (length region) arg) arg)))))
+  (pcase-let* ((origin (point))
+               (`(,beg . ,end) (prelude-get-positions-of-line-or-region))
+               (region (buffer-substring-no-properties beg end)))
+    (-dotimes arg
+      (lambda (n)
+        (goto-char end)
+        (newline)
+        (insert region)
+        (setq end (point))))
+    (goto-char (+ origin (* (length region) arg) arg))))
 
-;; TODO: Remove code duplication by extracting something more generic
 (defun prelude-duplicate-and-comment-current-line-or-region (arg)
   "Duplicates and comments the current line or region ARG times.
 If there's no region, the current line will be duplicated.  However, if
 there's a region, all lines that region covers will be duplicated."
   (interactive "p")
-  (let (beg end (origin (point)))
-    (if (and mark-active (> (point) (mark)))
-        (exchange-point-and-mark))
-    (setq beg (line-beginning-position))
-    (if mark-active
-        (exchange-point-and-mark))
+  (pcase-let* ((origin (point))
+               (`(,beg . ,end) (prelude-get-positions-of-line-or-region))
+               (region (buffer-substring-no-properties beg end)))
+    (comment-or-uncomment-region beg end)
     (setq end (line-end-position))
-    (let ((region (buffer-substring-no-properties beg end)))
-      (comment-or-uncomment-region beg end)
-      (setq end (line-end-position))
-      (-dotimes arg
-                (lambda (n)
-                  (goto-char end)
-                  (newline)
-                  (insert region)
-                  (setq end (point))))
-      (goto-char (+ origin (* (length region) arg) arg)))))
+    (-dotimes arg
+      (lambda (n)
+        (goto-char end)
+        (newline)
+        (insert region)
+        (setq end (point))))
+    (goto-char (+ origin (* (length region) arg) arg))))
 
 (defun prelude-rename-file-and-buffer ()
   "Renames current buffer and file it is visiting."
@@ -543,10 +550,12 @@ This follows freedesktop standards, should work in X servers."
                              '(2 "_NET_WM_STATE_FULLSCREEN" 0))
     (error "Only X server is supported")))
 
-(defun prelude-find-user-init-file ()
-  "Edit the `user-init-file', in another window."
-  (interactive)
-  (find-file-other-window user-init-file))
+(defun prelude-find-user-init-file (&optional arg)
+  "Edit the `prelude-user-init-file', in another window.
+With a prefix argument ARG, find the `user-init-file' instead."
+  (interactive "P")
+  (if arg (find-file-other-window user-init-file)
+    (find-file-other-window prelude-user-init-file)))
 
 (defun prelude-find-shell-init-file ()
   "Edit the shell init file in another window."
