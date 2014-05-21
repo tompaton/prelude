@@ -4,6 +4,7 @@
 
 ;; install packages
 (prelude-ensure-module-deps '(bm
+                              drag-stuff
                               dsvn
                               expand-region
                               highlight-symbol
@@ -13,6 +14,7 @@
                               wgrep
                               wgrep-ack
                               browse-kill-ring
+                              whole-line-or-region
                               kill-ring-search))
 
 ;; load my utility functions
@@ -140,7 +142,29 @@
 (require 'smooth-scrolling)
 
 ;; better keys for move line up/down
-(move-text-default-bindings)
+;; m-up isn't working in move-text to move a single line up any more
+;(require 'move-text)
+(require 'drag-stuff)
+;; custom bindings, don't use mode
+(global-set-key (kbd "<M-up>") 'drag-stuff-up)
+(global-set-key (kbd "<M-down>") 'drag-stuff-down)
+(global-set-key (kbd "<M-S-right>") 'drag-stuff-right)
+(global-set-key (kbd "<M-S-left>") 'drag-stuff-left)
+
+(require 'whole-line-or-region)
+(custom-set-variables
+ '(whole-line-or-region-extensions-alist
+   (quote
+    ((copy-region-as-kill whole-line-or-region-copy-region-as-kill nil)
+     (kill-region whole-line-or-region-kill-region nil)
+     (kill-ring-save whole-line-or-region-kill-ring-save nil)
+     (yank whole-line-or-region-yank nil)
+     ;;(move-text-up whole-line-or-region-move-text-up nil)
+     ;; add in comment/uncomment single line
+     (comment-or-uncomment-region whole-line-or-region-comment-dwim-2 nil)))))
+
+;; c-w without a selection should kill the whole line
+(whole-line-or-region-mode 1)
 
 ;; shift-arrows shouldn't change windows
 (load "shift_mark")
@@ -205,6 +229,7 @@
 ;; better helm-occur binding
 (global-set-key (kbd "C-x c C-o") 'helm-occur)
 
+;; display number of search matches
 (require 'anzu)
 (global-anzu-mode +1)
 

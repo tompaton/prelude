@@ -136,6 +136,10 @@
 (diminish 'abbrev-mode)
 (require 'anzu)
 (diminish 'anzu-mode)
+(require 'whole-line-or-region)
+(diminish `whole-line-or-region-mode)
+(require 'drag-stuff)
+(diminish `drag-stuff-mode)
 
 ;; make helm current line (C-z) match selection
 (custom-set-faces
