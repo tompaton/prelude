@@ -83,7 +83,13 @@
         sgml-slash
         python-backspace
         backward-sexp
-        sp--self-insert-command))
+        sp--self-insert-command
+        delete-horizontal-space
+        tom/join-lines
+        prelude-move-beginning-of-line
+        sp-remove-active-pair-overlay
+        whole-line-or-region-yank))
+
 (setq mc/cmds-to-run-once
       '(handle-switch-frame
         previous-multiframe-window))

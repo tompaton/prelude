@@ -20,3 +20,5 @@ projectile-bookmarks.eld
 session*
 .cask
 tramp
+personal/local/meltpaton-pc4--pymacs-rope.el
+personal/lib/pymacs.el
