@@ -4,6 +4,7 @@
 
 ;; install packages
 (prelude-ensure-module-deps '(bm
+                              color-identifiers-mode
                               drag-stuff
                               dsvn
                               expand-region
@@ -30,6 +31,9 @@
 (global-set-key [f6] 'whitespace-mode)
 (global-set-key [f7] 'highlight-indentation-mode)
 (global-set-key [f8] 'linum-mode)
+(global-set-key [f9] 'color-identifiers-mode)
+
+(global-color-identifiers-mode)
 
 ;; indent after new line
 (global-set-key (kbd "RET") 'newline-and-indent)
@@ -252,6 +256,12 @@
 
 (setq flycheck-check-syntax-automatically '(save mode-enabled))
 (global-flycheck-mode -1)
+
+;; better scratch buffer
+(setq initial-major-mode 'python-mode)
+(setq initial-scratch-message "\
+### *SCRATCH* ###
+")
 
 ;; load config from local/ folder based on current machine name
 (let ((local-el (concat "~/.emacs.d/personal/local/" system-name ".el")))
