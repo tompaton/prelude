@@ -47,6 +47,35 @@
         (insert new-c)
         (replace-string new-c old-c nil (1+ start) end)))))
 
+;; toggle parens
+(defun tom/toggle-parens ()
+  "Toggle tuple/list parens."
+  (interactive)
+  (save-excursion
+    (re-search-backward "[\[\(]")
+    (let* ((start (point))
+           (old-c1 (char-after start))
+           old-c2 new-c1 new-c2)
+      (setq old-c2
+            (case old-c1
+              (?\[ "]")
+              (?\( ")")))
+      (setq new-c1 
+            (case old-c1
+              (?\[ "(")
+              (?\( "[")))
+      (setq new-c2
+            (case old-c1
+              (?\[ ")")
+              (?\( "]")))
+      (setq old-c1 (char-to-string old-c1))
+      (delete-char 1)
+      (insert new-c1)
+      (re-search-forward old-c2)
+      (backward-char 1)
+      (delete-char 1)
+      (insert new-c2))))
+
 ;; split line on commas and indent (e.g. split python function params to separate lines)
 (defun tom/split-line-on-comma-and-indent ()
   "Split the current line at each comma and reindent.
@@ -183,3 +212,19 @@
               (let ((line (bounds-of-thing-at-point 'line)))
                 (buffer-substring-no-properties (car line) (cdr line))))
             ))))))
+
+(defun tom/un-camelcase-word-at-point ()
+  "un-camelcase the word at point, replacing uppercase chars with
+the lowercase version preceded by an underscore.
+
+The first char, if capitalized (eg, PascalCase) is just
+downcased, no preceding underscore.
+
+http://stackoverflow.com/a/15254151/3715
+"
+  (interactive)
+  (save-excursion
+    (let ((bounds (bounds-of-thing-at-point 'word)))
+      (replace-regexp "\\([A-Z]\\)" "_\\1" nil
+                      (1+ (car bounds)) (cdr bounds))
+      (downcase-region (car bounds) (cdr bounds)))))
