@@ -96,6 +96,10 @@ Returns the normalized filename (minus xplan base).
     (cond ((string-match "\\(sysadmin\\|supersolver\\)\\.\\(.+\\)" module)
            (setq file (concat "rpc_" (match-string 2 module) ".py"))
            (setq module (match-string 1 module))))
+    ;; alias wealthsolver to supersolver for now
+    (cond ((string-match "\\(sysadmin\\|wealthsolver\\)\\.\\(.+\\)" module)
+           (setq file "rpc_supersolver.py")
+           (setq module (match-string 1 module))))
     (message "xplan/jump: callJSON --> %s :: %s"
              (xplan/jump-file "src\\py\\xpt\\" (concat module "\\" file))
              (xplan/jump-method method))))
@@ -226,12 +230,35 @@ Returns the normalized filename (minus xplan base).
     (xplan/jump-url-handler (match-string 1 cur_line)
                             (concat "req_" (match-string 2 cur_line) ".py")
                             (match-string 3 cur_line)))
-   ((string-match "/\\(supersolver\\)/\\(scenario\\)/\\([[:word:]_]+\\)" cur_line)
+   ((string-match "/\\(supersolver\\)/\\(scenario\\|fee\\)/\\([[:word:]_]+\\)" cur_line)
     (xplan/jump-url-handler (match-string 1 cur_line)
                             (concat "req_" (match-string 2 cur_line) ".py")
                             (match-string 3 cur_line)))
    ((string-match "/\\(iqm\\+/rr\\|supersolver\\)/\\([[:word:]_]+\\)" cur_line)
     (xplan/jump-url-handler (match-string 1 cur_line)
+                            "protocol.py"
+                            (match-string 2 cur_line)))
+   ;; alias wealthsolver to supersolver for now
+   ((string-match "/\\(sysadmin\\)/\\(wealthsolver\\)/\\([[:word:]_]+\\)" cur_line)
+    (xplan/jump-url-handler (match-string 1 cur_line)
+                            "req_supersolver.py"
+                            (match-string 3 cur_line)))
+   ((string-match "/\\(wealthsolver\\)/\\(scenario\\|fee\\)/\\([[:word:]_]+\\)" cur_line)
+    (xplan/jump-url-handler "supersolver"
+                            (concat "req_" (match-string 2 cur_line) ".py")
+                            (match-string 3 cur_line)))
+   ((string-match "/\\(wealthsolver\\)/\\([[:word:]_]+\\)" cur_line)
+    (xplan/jump-url-handler "supersolver"
+                            "protocol.py"
+                            (match-string 2 cur_line)))
+
+   ;; match where using XPLAN.wealthsolver.BASEURL or $WS_BASEURL constants
+   ((string-match "\\(XPLAN\\.wealthsolver\\.\\|\\$WS_\\)BASEURL.+/\\(scenario\\|fee\\)/\\([[:word:]_]+\\)" cur_line)
+    (xplan/jump-url-handler "supersolver"
+                            (concat "req_" (match-string 2 cur_line) ".py")
+                            (match-string 3 cur_line)))
+   ((string-match "\\(XPLAN\\.wealthsolver\\.\\|\\$WS_\\)BASEURL.+/\\([[:word:]_]+\\)" cur_line)
+    (xplan/jump-url-handler "supersolver"
                             "protocol.py"
                             (match-string 2 cur_line)))
    ))
