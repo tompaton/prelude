@@ -109,10 +109,65 @@ Returns the normalized filename (minus xplan base).
   (setq method (concat "req_" method))
   ;; rr, iqm1, iqm2 are in insurance subfolder
   (cond ((string-match "\\(\\_<rr\\|rr_sg\\|rr_gb\\|iqm1\\|iqm2\\_>\\)" module)
-         (setq module (concat "insurance\\" (match-string 1 module)))))
+         (setq module (concat "insurance\\" (match-string 1 module))))
+        ((string-match "\\(wealthsolver\\)" module)
+         (setq module "supersolver")))
   (message "xplan/jump: url --> %s :: %s"
            (xplan/jump-file "src\\py\\xpt\\" (concat module "\\" file))
            (xplan/jump-method method)))
+
+(defun xplan/jump-urls-register (url_name)
+  "Jump to @urls.register('url_name' declaration in current buffer"
+  (let ((pos (point)))
+    (goto-char (point-min))
+    (if (ignore-errors
+          ;; only match at col 1
+          (re-search-forward (concat "@urls\\.register([\"']"
+                                     url_name
+                                     "[\"']")))
+        (progn
+          (recenter-top-bottom)
+          url_name)
+      (progn
+        ;; restore cursor
+        (goto-char pos)
+        nil))))
+
+(defun xplan/jump-url2-handler (url_name)
+  "Jump to the url handler for $URL 'url_name', in file (e.g. protocol.py.)"
+  ;; this hard-coded list isn't very elegant, some alternatives:
+  ;; 1) code in a list of prefixes --> files (actually more fragile)
+  ;; 2) just hardcode protocol.py and search for req_ imports in that
+  ;; 3) shell out to ack and jump to the match (possibly neatest)
+  (let ((files '("supersolver\\protocol.py"
+                 "supersolver\\req_apl.py"
+                 "supersolver\\req_fee.py"
+                 "supersolver\\req_insurance.py"
+                 "supersolver\\req_merge_syntax.py"
+                 "supersolver\\req_model_portfolios.py"
+                 "supersolver\\req_plan.py"
+                 "supersolver\\req_scenario.py"))
+        (found nil))
+    (while (and (not found)
+                files)
+      (let ((file (car files)))
+        ;; use xplan/jump-file at first so current buffer isn't changed unless
+        ;; we find a match
+        (if (with-current-buffer
+                (find-file-noselect (concat (xplan/branch-base)
+                                            "src\\py\\xpt\\"
+                                            (xplan/normalize-path file)))
+              (xplan/jump-urls-register url_name))
+            (progn
+              (message "xplan/jump: $URL %s --> %s" url_name file)
+              ;; select once found
+              (xplan/jump-file "src\\py\\xpt\\" file)
+              (setq found t)
+              (setq files ()))))
+      (setq files (cdr files)))
+    (if (not found)
+        (message "xplan/jump: $URL %s not found" url_name))
+    found))
 
 (defun xplan/jump-url (url)
   "Jump to the handler for 'url'"
@@ -263,6 +318,16 @@ Returns the normalized filename (minus xplan base).
                             (match-string 2 cur_line)))
    ))
 
+(defun xplan/jump-test-url2 (cur_line)
+  "test cur_line for a $URL() to jump to"
+  (cond
+   ;; $URL --> protocol req handler
+   ((string-match "\\$URL([\"']\\([[:word:]\\._]+\\)[\"']" cur_line)
+    (xplan/jump-url2-handler (match-string 1 cur_line)))
+   ;; get_url/redirect_url --> protocol req handler
+   ((string-match "\\b\\(get_url\\|redirect_url\\)([\"']\\([[:word:]\\._]+\\)[\"']" cur_line)
+    (xplan/jump-url2-handler (match-string 2 cur_line)))))
+
 (defun xplan/jump-test-python-import (cur_line)
   "test cur_line for a python import to jump to"
   (cond
@@ -308,6 +373,7 @@ Follow python imports, urls to request handlers, rpc calls etc."
         ((xplan/jump-test-include-html-template cur_line))
         ((xplan/jump-test-add-js cur_line))
         ((xplan/jump-test-add-css cur_line))
+        ((xplan/jump-test-url2 cur_line))
         ((xplan/jump-test-url cur_line))
         ((xplan/jump-test-python-import cur_line))
 
