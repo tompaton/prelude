@@ -3,14 +3,17 @@
 (add-to-list 'load-path "~/.emacs.d/personal/lib/")
 
 ;; install packages
-(prelude-ensure-module-deps '(bm
+(prelude-ensure-module-deps '(avy
+                              bm
                               color-identifiers-mode
+                              cycbuf
                               drag-stuff
                               dsvn
                               expand-region
                               highlight-symbol
                               multiple-cursors
                               smooth-scrolling
+                              swiper-helm
                               ack-and-a-half
                               wgrep
                               wgrep-ack
@@ -24,7 +27,8 @@
 (global-set-key (kbd "C-c w") 'delete-trailing-whitespace)
 (global-set-key (kbd "C-c DEL") 'tom/delete-trailing-whitespace-current-line)
 ; delete all spaces around the point
-(global-set-key (kbd "<S-delete>") (lambda () (interactive) (just-one-space 0)))
+;;(global-set-key (kbd "<S-delete>") (lambda () (interactive) (just-one-space 0)))
+(global-set-key (kbd "<M-SPC>") 'cycle-spacing)
 
 ;; quick keys to toggle view
 (global-set-key [f5] 'toggle-truncate-lines)
@@ -33,7 +37,13 @@
 (global-set-key [f8] 'linum-mode)
 (global-set-key [f9] 'color-identifiers-mode)
 
-(global-color-identifiers-mode)
+(require 'cycbuf)
+(global-set-key [(meta next)] 'cycbuf-switch-to-next-buffer)
+(global-set-key [(meta prior)] 'cycbuf-switch-to-previous-buffer)
+;; (global-set-key [(meta shift next)] 'cycbuf-switch-to-next-buffer-no-timeout)
+;; (global-set-key [(meta shift prior)] 'cycbuf-switch-to-previous-buffer-no-timeout)
+
+;(global-color-identifiers-mode)
 
 ;; indent after new line
 (global-set-key (kbd "RET") 'newline-and-indent)
@@ -135,7 +145,7 @@
       do (add-to-list 'helm-boring-file-regexp-list ext))
 
 ;; find in all buffers
-(global-set-key (kbd "M-s") 'tom/multi-occur-in-matching-buffers)
+;;(global-set-key (kbd "M-s") 'tom/multi-occur-in-matching-buffers)
 
 ;; switch between multiple windows
 (global-set-key (kbd "C-`") 'other-frame)
@@ -262,6 +272,20 @@
 (setq initial-scratch-message "\
 ### *SCRATCH* ###
 ")
+
+(require 'swiper-helm)
+(global-set-key (kbd "C-s") 'isearch-forward)
+;; torn between swiper and swiper-helm
+;; swiper works better with windows split horizontally, but doesn't do C-w
+;; swiper-helm is prettier, but still doesn't do C-w very well or M-e
+(global-set-key (kbd "M-s") 'swiper)
+(global-set-key (kbd "C-x c s") 'swiper-helm)
+
+(require 'avy)
+(global-set-key (kbd "M-g M-g") 'avy-goto-line)
+(global-set-key (kbd "C-;") 'avy-goto-word-or-subword-1)
+(avy-setup-default)
+
 
 ;; load config from local/ folder based on current machine name
 (let ((local-el (concat "~/.emacs.d/personal/local/" system-name ".el")))
