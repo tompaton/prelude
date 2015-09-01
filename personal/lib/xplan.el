@@ -141,12 +141,17 @@ Returns the normalized filename (minus xplan base).
   ;; 3) shell out to ack and jump to the match (possibly neatest)
   (let ((files '("supersolver\\protocol.py"
                  "supersolver\\req_apl.py"
+                 "supersolver\\req_compare.py"
                  "supersolver\\req_fee.py"
                  "supersolver\\req_insurance.py"
+                 "supersolver\\req_library.py"
                  "supersolver\\req_merge_syntax.py"
                  "supersolver\\req_model_portfolios.py"
                  "supersolver\\req_plan.py"
-                 "supersolver\\req_scenario.py"))
+                 "supersolver\\req_research.py"
+                 "supersolver\\req_scenario.py"
+                 "supersolver\\req_ttr.py"
+                 "supersolver\\req_v2.py"))
         (found nil))
     (while (and (not found)
                 files)
