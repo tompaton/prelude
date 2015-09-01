@@ -100,6 +100,7 @@
         sp--self-insert-command
         delete-horizontal-space
         tom/join-lines
+        tom/kill-and-join-forward
         prelude-move-beginning-of-line
         sp-remove-active-pair-overlay
         whole-line-or-region-yank))
