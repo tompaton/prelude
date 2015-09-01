@@ -92,7 +92,9 @@
                                                            (cdr powerline-default-separator-dir))))
                           (lhs (list (powerline-raw "%*" nil 'l)
                                      (powerline-buffer-id nil 'l)
-                                     (powerline-raw '(" " (:eval (ignore-errors (which-function)))))
+                                     ;; this is too slow in long python modules...
+                                     ;; rainy-day: memoize which-function and expire the cached value after a small delay
+                                     ;;(powerline-raw '(" " (:eval (ignore-errors (which-function)))))
                                      (powerline-raw " ")
                                      (funcall separator-left mode-line face1)
                                      (when (boundp 'erc-modified-channels-object)
@@ -140,6 +142,10 @@
 (diminish `whole-line-or-region-mode)
 (require 'drag-stuff)
 (diminish `drag-stuff-mode)
+(require 'company)
+(diminish `company-mode)
+(require 'color-identifiers-mode)
+(diminish `color-identifiers-mode)
 
 ;; make helm current line (C-z) match selection
 (custom-set-faces
