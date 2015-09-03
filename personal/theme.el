@@ -142,8 +142,8 @@
 (diminish `whole-line-or-region-mode)
 (require 'drag-stuff)
 (diminish `drag-stuff-mode)
-(require 'company)
-(diminish `company-mode)
+;(require 'company)
+;(diminish `company-mode)
 (require 'color-identifiers-mode)
 (diminish `color-identifiers-mode)
 

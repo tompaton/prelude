@@ -3,7 +3,8 @@
 (add-to-list 'load-path "~/.emacs.d/personal/lib/")
 
 ;; install packages
-(prelude-ensure-module-deps '(avy
+(prelude-ensure-module-deps '(ag
+                              avy
                               bm
                               color-identifiers-mode
                               cycbuf
@@ -11,12 +12,11 @@
                               dsvn
                               expand-region
                               highlight-symbol
+                              key-chord
                               multiple-cursors
                               smooth-scrolling
                               swiper-helm
-                              ack-and-a-half
                               wgrep
-                              wgrep-ack
                               browse-kill-ring
                               whole-line-or-region
                               kill-ring-search))
@@ -193,13 +193,8 @@
 ;; Toggle window dedication
 (global-set-key [pause] 'tom/toggle-window-dedicated)
 
-;; .svn support for finding project root
-(require 'ack-and-a-half)
-(add-to-list 'ack-and-a-half-project-root-file-patterns "\\`.svn\\'")
-
 ;; editable grep/ack buffers (C-c C-p)
 (require 'wgrep)
-(require 'wgrep-ack)
 
 ;; browse & search kill ring
 (require 'browse-kill-ring)
