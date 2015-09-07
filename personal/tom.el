@@ -284,6 +284,11 @@
 (global-set-key (kbd "C-;") 'avy-goto-word-or-subword-1)
 (avy-setup-default)
 
+;; use dwim ag (redefine ag as ag-project-regexp)
+(defun ag (regexp)
+  (interactive (list (ag/read-from-minibuffer "Search regexp")))
+  (ag/search regexp (ag/project-root default-directory) :regexp t))
+
 
 ;; load config from local/ folder based on current machine name
 (let ((local-el (concat "~/.emacs.d/personal/local/" system-name ".el")))
