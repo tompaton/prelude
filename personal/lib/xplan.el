@@ -210,7 +210,7 @@ Returns the normalized filename (minus xplan base).
   "test cur_line for an traceback error line to jump to"
   (cond
    ;; Traceback error line
-   ((string-match "^[ ]+File \\\"\\(.+\\)\\\", line \\([0-9]+\\)," cur_line)
+   ((string-match "^[ ]+File \\\"\\(.+\\)\\\", line \\([0-9]+\\),?" cur_line)
     (let ((file (match-string 1 cur_line))
           (line (string-to-number (match-string 2 cur_line))))
       (message "xplan/jump: traceback %s (%d)"
