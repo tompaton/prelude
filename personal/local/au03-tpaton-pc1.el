@@ -1,7 +1,5 @@
 ;;; xplan/cygwin specific customisations
 
-(setq python-shell-interpreter "C:\\Python27\\python.exe")
-
 ;; one frame per monitor
 (make-frame)
 (make-frame)
