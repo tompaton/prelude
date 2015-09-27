@@ -14,6 +14,7 @@
                               highlight-symbol
                               key-chord
                               multiple-cursors
+                              restclient
                               smooth-scrolling
                               swiper-helm
                               wgrep
