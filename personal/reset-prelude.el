@@ -41,8 +41,9 @@
 ;; don't auto reload (TODO: not working...?)
 (global-auto-revert-mode nil)
 
-;; don't auto save
+;; don't want it saving automatically, recover-session is better
 (setq prelude-auto-save nil)
+(remove-hook 'focus-out-hook 'prelude-save-all-buffers)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; things that were removed from prelude that I'd gotten used to
@@ -62,6 +63,3 @@
 
 ;; this is crashing emacs?
 (projectile-global-mode -1)
-
-;; don't want it saving automatically, recover-session is better
-(remove-hook 'focus-out-hook 'prelude-save-all-buffers)
