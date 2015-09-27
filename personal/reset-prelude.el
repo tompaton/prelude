@@ -62,3 +62,6 @@
 
 ;; this is crashing emacs?
 (projectile-global-mode -1)
+
+;; don't want it saving automatically, recover-session is better
+(remove-hook 'focus-out-hook 'prelude-save-all-buffers)
