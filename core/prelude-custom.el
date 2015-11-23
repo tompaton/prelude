@@ -1,6 +1,6 @@
 ;;; prelude-custom.el --- Emacs Prelude: Prelude's customizable variables.
 ;;
-;; Copyright © 2011-2013 Bozhidar Batsov
+;; Copyright © 2011-2015 Bozhidar Batsov
 ;;
 ;; Author: Bozhidar Batsov <bozhidar@batsov.com>
 ;; URL: https://github.com/bbatsov/prelude
@@ -73,6 +73,33 @@ folder as the one that should be visited when running
 `prelude-find-user-init-file'.  This can be easily set to the desired buffer
 in lisp by putting `(setq prelude-user-init-file load-file-name)'
 in the desired elisp file."
+  :type 'string
+  :group 'prelude)
+
+(defcustom prelude-indent-sensitive-modes
+  '(conf-mode coffee-mode haml-mode python-mode slim-mode yaml-mode)
+  "Modes for which auto-indenting is suppressed."
+  :type 'list
+  :group 'prelude)
+
+(defcustom prelude-yank-indent-modes '(LaTeX-mode TeX-mode)
+  "Modes in which to indent regions that are yanked (or yank-popped).
+Only modes that don't derive from `prog-mode' should be listed here."
+  :type 'list
+  :group 'prelude)
+
+(defcustom prelude-yank-indent-threshold 1000
+  "Threshold (# chars) over which indentation does not automatically occur."
+  :type 'number
+  :group 'prelude)
+
+(defcustom prelude-theme 'zenburn
+  "The default color theme, change this in your /personal/preload config."
+  :type 'symbol
+  :group 'prelude)
+
+(defcustom prelude-shell (getenv "SHELL")
+  "The default shell to run with `prelude-visit-term-buffer'"
   :type 'string
   :group 'prelude)
 
