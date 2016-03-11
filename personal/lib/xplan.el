@@ -459,3 +459,25 @@ Doesn't mess with non-xplan source buffers."
   "Open an *Occur* window for the current buffer listing all $variables"
   (interactive)
   (occur "\\$[a-zA-Z0-9_]+"))
+
+(defun xplan/directory (mode)
+  "get xplan directory from shortcut code"
+  (concat (xplan/branch-base)
+          (cond ((string= mode "py") "src\\py\\xpt\\")
+                ((string= mode "ss") "src\\py\\xpt\\supersolver\\")
+                ((string= mode "data") "data\\")
+                (t ""))))
+
+(require 'ag)
+(defvar ag-xplan-mode-history nil)
+(defun ag-xplan (mode regexp)
+  "wrapper for ag with xplan specific directory shortcut options
+
+call with prefix arg to edit command line before running."
+  (interactive (list (read-from-minibuffer
+                      "Mode (py|ss|data|all): "
+                      (car ag-xplan-mode-history)
+                      nil nil 'ag-xplan-mode-history)
+                     (ag/read-from-minibuffer "Search regexp")))
+  (let ((directory (xplan/directory mode)))
+    (ag-regexp regexp directory)))
