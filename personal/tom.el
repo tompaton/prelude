@@ -243,6 +243,7 @@
 ;; better find-tag keybindings
 ;(global-set-key (kbd "M-.") 'tom/find-tag)
 (global-set-key (kbd "M-.") 'helm-etags-select)
+(global-set-key (kbd "M->") 'helm-imenu-anywhere)
 (global-set-key (kbd "M-,") 'pop-tag-mark)
 
 ;; better helm-occur binding
