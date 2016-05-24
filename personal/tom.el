@@ -292,6 +292,19 @@
   (ag/search regexp (ag/project-root default-directory) :regexp t))
 
 
+(require 'vc)
+(defvar tom/ediff-branch-history nil)
+(defun tom/ediff-branch (branch)
+  "wrapper for ediff-buffers and vc-revision-other-window"
+  (interactive (list (read-from-minibuffer
+                      "Branch: "
+                      (car tom/ediff-branch-history)
+                      nil nil 'tom/ediff-branch-history)))
+  (let* ((buffer (current-buffer))
+         (file (buffer-file-name buffer))
+         (rev-buffer (vc-find-revision file branch)))
+    (ediff-buffers buffer rev-buffer)))
+
 ;; load config from local/ folder based on current machine name
 (let ((local-el (concat "~/.emacs.d/personal/local/" system-name ".el")))
   (when (file-exists-p local-el)
