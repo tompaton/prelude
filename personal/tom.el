@@ -18,6 +18,7 @@
                               smooth-scrolling
                               swiper-helm
                               wgrep
+                              which-key
                               browse-kill-ring
                               whole-line-or-region
                               kill-ring-search))
@@ -283,6 +284,8 @@
     (when filename
       (kill-new filename)
       (message "Copied buffer file name '%s' to the clipboard." filename))))
+
+(which-key-mode +1)
 
 (require 'swiper-helm)
 (global-set-key (kbd "C-s") 'isearch-forward)
