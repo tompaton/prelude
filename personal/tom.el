@@ -104,6 +104,7 @@
         tom/kill-and-join-forward
         prelude-move-beginning-of-line
         sp-remove-active-pair-overlay
+        whole-line-or-region-kill-ring-save
         whole-line-or-region-yank))
 
 (setq mc/cmds-to-run-once
@@ -272,6 +273,16 @@
 (setq initial-scratch-message "\
 ### *SCRATCH* ###
 ")
+
+(defun copy-file-name-to-clipboard ()
+  "Copy the current buffer file name to the clipboard."
+  (interactive)
+  (let ((filename (if (equal major-mode 'dired-mode)
+                      default-directory
+                    (buffer-file-name))))
+    (when filename
+      (kill-new filename)
+      (message "Copied buffer file name '%s' to the clipboard." filename))))
 
 (require 'swiper-helm)
 (global-set-key (kbd "C-s") 'isearch-forward)
