@@ -21,7 +21,8 @@
                               which-key
                               browse-kill-ring
                               whole-line-or-region
-                              kill-ring-search))
+                              kill-ring-search
+                              avy))
 
 ;; load my utility functions
 (load-file "~/.emacs.d/personal/lib/toms-utils.el")
@@ -141,15 +142,6 @@
                                 (interactive)
                                 (search-forward ")")))
 
-;; helm
-(require 'helm-config)
-
-(require 'helm-files)
-(setq helm-idle-delay 0.1)
-(setq helm-input-idle-delay 0.1)
-(loop for ext in '("\\.pyc$" "\\.pyo$")
-      do (add-to-list 'helm-boring-file-regexp-list ext))
-
 ;; find in all buffers
 ;;(global-set-key (kbd "M-s") 'tom/multi-occur-in-matching-buffers)
 
@@ -159,6 +151,8 @@
 (global-set-key (kbd "<C-S-tab>") 'previous-multiframe-window)
 (global-set-key (kbd "<C-S-iso-lefttab>") 'previous-multiframe-window) ;; for ubuntu
 (global-set-key (kbd "C-x o") 'other-window)
+
+(require 'cycbuf)
 
 ;; transpose windows
 (require 'transpose-frame)
@@ -255,6 +249,9 @@
 (require 'anzu)
 (global-anzu-mode +1)
 
+(require 'swiper)
+(global-set-key (kbd "M-s") 'swiper)
+
 ;; enable semantic mode so c-x c i is reasonably fast
 (semantic-mode 1)
 (add-to-list 'semantic-inhibit-functions
@@ -295,10 +292,12 @@
 (global-set-key (kbd "M-s") 'swiper)
 (global-set-key (kbd "C-x c s") 'swiper-helm)
 
+;; avy
 (require 'avy)
-(global-set-key (kbd "M-g M-g") 'avy-goto-line)
-(global-set-key (kbd "C-;") 'avy-goto-word-or-subword-1)
-(avy-setup-default)
+(global-set-key (kbd "M-g M-g") 'avy-goto-line)  ;; falls back to goto-line if you type numbers
+(avy-setup-default)  ;; C-' in isearch to select from visible matches
+(global-set-key (kbd "C-'") 'avy-goto-char)  ;; type 1 chars, then select from visible matches
+(global-set-key (kbd "C-;") 'avy-goto-word-or-subword-1)  ;; type 1 chars, then select from visible matches
 
 ;; use dwim ag (redefine ag as ag-project-regexp)
 (defun ag (regexp)
@@ -324,3 +323,5 @@
   (when (file-exists-p local-el)
     (message "Loading local configuration files in %s..." local-el)
     (load-file local-el)))
+
+(remove-hook 'focus-out-hook 'prelude-save-all-buffers)

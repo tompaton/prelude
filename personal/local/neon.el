@@ -97,3 +97,33 @@
   "convert russian translated file from windows-1251-dos to iso-latin-1-unix"
   (interactive)
   (recode-region (point-min) (point-max) 'windows-1251-dos 'iso-latin-1-unix))
+
+;; these choke a bit on gps2 models.py
+(global-color-identifiers-mode -1)
+(global-company-mode -1)
+
+(custom-set-variables
+ '(prelude-flyspell nil))
+
+(flycheck-define-checker javascript-flow
+  "A JavaScript syntax and style checker using Flow.
+
+See URL `http://flowtype.org/'."
+  :command ("/home/tom/dev/flow/flow" source-original)
+  :error-patterns
+  ((error line-start
+          (file-name)
+          ":"
+          line
+          ":"
+          (minimal-match (one-or-more not-newline))
+          ": "
+          (message (minimal-match (and (one-or-more anything) "\n")))
+          line-end))
+  :modes js-mode)
+
+(flycheck-add-next-checker 'javascript-gjslint 'javascript-flow)
+
+(require 'repdet)
+(global-set-key [f11] 'repdet-use-as-macro)
+(global-set-key [f12] 'call-last-kbd-macro)

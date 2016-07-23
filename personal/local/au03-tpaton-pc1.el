@@ -28,3 +28,14 @@
       '("c:/xplanbase/version/9.99.999/src/py/xpt/TAGS"
         "c:/xplanbase/version/9.99.999/src/py/xlib/TAGS"
         "c:/xplanbase/version/9.99.999/data/wwwroot/js/TAGS"))
+
+;; helm
+
+(require 'helm-config)
+
+(require 'helm-files)
+(setq helm-idle-delay 0.1)
+(setq helm-input-idle-delay 0.1)
+(loop for ext in '("\\.pyc$" "\\.pyo$")
+      do (add-to-list 'helm-boring-file-regexp-list ext))
+
