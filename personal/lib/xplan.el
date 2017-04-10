@@ -177,21 +177,23 @@ Returns the normalized filename (minus xplan base).
 (defun xplan/jump-url (url)
   "Jump to the handler for 'url'"
   (interactive "sUrl: ")
-  (let ((bits (split-string url "/")))
-    (if (string= "" (car bits))
-        (setq bits (cdr bits)))
-    (cond ((= (length bits) 2)
-           (xplan/jump-url-handler (nth 0 bits)
-                                   "protocol.py"
-                                   (nth 1 bits)))
-          ((string= (nth 0 bits) "iqm+")
-           (xplan/jump-url-handler (concat "insurance/" (nth 1 bits))
-                                   "protocol.py"
-                                   (nth 2 bits)))
-          (t
-           (xplan/jump-url-handler (nth 0 bits)
-                                   (concat "req_" (nth 1 bits) ".py")
-                                   (nth 2 bits))))))
+  (if (string-match "/" url)
+      (let ((bits (split-string url "/")))
+        (if (string= "" (car bits))
+            (setq bits (cdr bits)))
+        (cond ((= (length bits) 2)
+               (xplan/jump-url-handler (nth 0 bits)
+                                       "protocol.py"
+                                       (nth 1 bits)))
+              ((string= (nth 0 bits) "iqm+")
+               (xplan/jump-url-handler (concat "insurance/" (nth 1 bits))
+                                       "protocol.py"
+                                       (nth 2 bits)))
+              (t
+               (xplan/jump-url-handler (nth 0 bits)
+                                       (concat "req_" (nth 1 bits) ".py")
+                                       (nth 2 bits)))))
+    (xplan/jump-url2-handler url)))
 
 
 (defun xplan/jump-test-pyflakes-error (cur_line)
