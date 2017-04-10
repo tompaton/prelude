@@ -23,6 +23,10 @@
 
 (setq recentf-exclude '(xplan/non-trunk-file-p))
 
+;; use find from cygwin
+(setq find-program "C:/cygwin64/bin/find")
+(setq find-ls-option '("-ls" . "-dilsb"))
+
 ;; TAGS files for xplan trunk branch
 (setq tags-table-list
       '("c:/xplanbase/version/9.99.999/src/py/xpt/TAGS"
