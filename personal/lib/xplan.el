@@ -466,6 +466,7 @@ Doesn't mess with non-xplan source buffers."
           (cond ((string= mode "py") "src\\py\\xpt\\")
                 ((string= mode "ss") "src\\py\\xpt\\supersolver\\")
                 ((string= mode "api") "src\\py\\xpt\\resourceful\\api\\supersolver\\")
+                ((string= mode "xtest") "src\\py\\xtest\\supersolver\\")
                 ((string= mode "data") "data\\")
                 (t ""))))
 
@@ -476,7 +477,7 @@ Doesn't mess with non-xplan source buffers."
 
 call with prefix arg to edit command line before running."
   (interactive (list (read-from-minibuffer
-                      "Mode (py|ss|api|data|all): "
+                      "Mode (py|ss|api|xtest|data|all): "
                       (car ag-xplan-mode-history)
                       nil nil 'ag-xplan-mode-history)
                      (ag/read-from-minibuffer "Search regexp")))
