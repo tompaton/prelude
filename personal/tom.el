@@ -272,6 +272,23 @@
 ### *SCRATCH* ###
 ")
 
+(defun truncate-log-file ()
+  "Delete all but the last 100 lines of the log file."
+  (interactive)
+  (if (s-ends-with? ".log" (buffer-file-name) t)
+      (progn
+        (revert-buffer t t t)
+        (end-of-buffer)
+        (forward-line -100)
+        (let ((end (point)))
+          (beginning-of-buffer)
+          (delete-region (point) end))
+        (save-buffer)
+        (revert-buffer t t t)
+        (end-of-buffer)
+        (move-beginning-of-line nil))
+    (message "Not visiting a .log file")))
+
 (defun copy-file-name-to-clipboard ()
   "Copy the current buffer file name to the clipboard."
   (interactive)
