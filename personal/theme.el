@@ -1,6 +1,14 @@
 ;;; tom's "theme"
 
 (prelude-ensure-module-deps '(fill-column-indicator
+                              whitespace
+                              diminish
+                              highlight-symbol
+                              yasnippet
+                              anzu
+                              whole-line-or-region
+                              drag-stuff
+                              color-identifiers-mode
                               hlinum
                               powerline
                               col-highlight))
