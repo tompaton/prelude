@@ -29,9 +29,9 @@
 
 ;; TAGS files for xplan trunk branch
 (setq tags-table-list
-      '("c:/xplanbase/version/9.99.999/src/py/xpt/TAGS"
-        "c:/xplanbase/version/9.99.999/src/py/xlib/TAGS"
-        "c:/xplanbase/version/9.99.999/data/wwwroot/js/TAGS"))
+      '("d:/xplanbase/version/9.99.999/src/py/xpt/TAGS"
+        "d:/xplanbase/version/9.99.999/src/py/xlib/TAGS"
+        "d:/xplanbase/version/9.99.999/data/wwwroot/js/TAGS"))
 
 ;; helm
 

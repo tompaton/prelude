@@ -22,10 +22,10 @@ and change backslashes to forward slashes."
   "Get the current branch base path from the current file."
   (xplan/normalize-path
    (let ((file (or (buffer-file-name) "")))
-     (cond ((string-match "\\(c:.xplanbase.version.[29].[0-9][0-9]?.[89][89][89].\\)" file)
+     (cond ((string-match "\\(d:.xplanbase.version.[29].[0-9][0-9]?.[89][89][89].\\)" file)
             (match-string 1 file))
            (t
-            (concat "c:\\xplanbase\\version\\" xplan/TRUNK "\\"))))))
+            (concat "d:\\xplanbase\\version\\" xplan/TRUNK "\\"))))))
 
 (defun xplan/jump-file (path source &optional CREATE)
   "Jump to the given source file.
