@@ -36,14 +36,14 @@
 (require 'package)
 
 (add-to-list 'package-archives
-             '("melpa" . "https://melpa.org/packages/") t)
+             '("melpa" . "http://melpa.org/packages/") t)
 ;; set package-user-dir to be relative to Prelude install path
 (setq package-user-dir (expand-file-name "elpa" prelude-dir))
 (package-initialize)
 
 (defvar prelude-packages
-  '(ace-jump-buffer
-    ace-jump-mode
+  '(;ace-jump-buffer
+    ;ace-jump-mode
     ace-window
     anzu
     avy
