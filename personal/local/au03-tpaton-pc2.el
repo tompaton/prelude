@@ -43,3 +43,8 @@
 (loop for ext in '("\\.pyc$" "\\.pyo$")
       do (add-to-list 'helm-boring-file-regexp-list ext))
 
+
+(require 'smex)
+(smex-initialize)
+(global-set-key (kbd "M-x") 'smex)
+(global-set-key (kbd "M-X") 'smex-major-mode-commands)
