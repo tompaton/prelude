@@ -78,6 +78,8 @@
 (global-set-key (kbd "<M-left>") 'highlight-symbol-prev)
 (global-set-key (kbd "M-h") 'highlight-symbol-at-point)
 
+(global-set-key (kbd "M-|") 'flash-column-highlight)
+
 (defun tom/prog-mode-defaults ()
   "Default coding hook, useful with any programming language."
   (highlight-symbol-mode t))
