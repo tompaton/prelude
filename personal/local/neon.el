@@ -130,21 +130,3 @@ See URL `http://flowtype.org/'."
 (require 'repdet)
 (global-set-key [f11] 'repdet-use-as-macro)
 (global-set-key [f12] 'call-last-kbd-macro)
-
-
-(require 'org-bullets)
-(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
-
-(let* ((base-font-color     (face-foreground 'default nil 'default))
-       (headline           `(:inherit default :weight bold :foreground ,base-font-color)))
-
-  (custom-theme-set-faces 'user
-                          `(org-level-8 ((t (,@headline))))
-                          `(org-level-7 ((t (,@headline))))
-                          `(org-level-6 ((t (,@headline))))
-                          `(org-level-5 ((t (,@headline))))
-                          `(org-level-4 ((t (,@headline :height 1.1))))
-                          `(org-level-3 ((t (,@headline :height 1.25))))
-                          `(org-level-2 ((t (,@headline :height 1.5))))
-                          `(org-level-1 ((t (,@headline :height 1.75))))
-                          `(org-document-title ((t (,@headline :height 1.5 :underline nil))))))
