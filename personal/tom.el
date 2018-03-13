@@ -98,16 +98,18 @@
 (global-set-key (kbd "H-SPC") 'set-rectangular-region-anchor)
 
 (setq mc/cmds-to-run-for-all
-      '(python-electric-colon
-        sgml-slash
-        python-backspace
-        backward-sexp
-        sp--self-insert-command
+      '(backward-sexp
         delete-horizontal-space
+        electric-newline-and-maybe-indent
+        indent-for-tab-command
+        prelude-move-beginning-of-line
+        python-backspace
+        python-electric-colon
+        sgml-slash
+        sp--self-insert-command
+        sp-remove-active-pair-overlay
         tom/join-lines
         tom/kill-and-join-forward
-        prelude-move-beginning-of-line
-        sp-remove-active-pair-overlay
         whole-line-or-region-kill-ring-save
         whole-line-or-region-yank))
 

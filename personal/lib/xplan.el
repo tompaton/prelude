@@ -1,4 +1,4 @@
-(setq xplan/TRUNK "9.99.999")
+(setq xplan/TRUNK "99.99.999")
 
 (defun xplan/normalize-path (source)
   "Convert list of path components to a path if necessary
@@ -22,10 +22,10 @@ and change backslashes to forward slashes."
   "Get the current branch base path from the current file."
   (xplan/normalize-path
    (let ((file (or (buffer-file-name) "")))
-     (cond ((string-match "\\(d:.xplanbase.version.[29].[0-9][0-9]?.[89][89][89].\\)" file)
+     (cond ((string-match "\\(c:.xplanbase.version.[0-9][0-9]?.[0-9][0-9]?.[89][89][89].\\)" file)
             (match-string 1 file))
            (t
-            (concat "d:\\xplanbase\\version\\" xplan/TRUNK "\\"))))))
+            (concat "c:\\xplanbase\\version\\" xplan/TRUNK "\\"))))))
 
 (defun xplan/jump-file (path source &optional CREATE)
   "Jump to the given source file.
@@ -409,7 +409,7 @@ branch can be 'major.minor.patch', or just 'major.minor' or 'minor'."
            (setq branch (concat "2." branch ".999")))
           ((= (length branch_bits) 2)  ; major.minor
            (setq branch (concat branch ".999"))))
-    (string-match "\\(.+\\)[29].[0-9][0-9]?.[89][89][89]\\(.+\\)" filename)
+    (string-match "\\(.+[\\/]\\)[0-9][0-9]?.[0-9][0-9]?.[89][89][89]\\([\\/].+\\)" filename)
     (find-file (concat (match-string 1 filename)
                        branch
                        (match-string 2 filename)))))
