@@ -1,6 +1,6 @@
 ;;; prelude-web.el --- Emacs Prelude: web template support
 ;;
-;; Copyright © 2011-2015 Bozhidar Batsov
+;; Copyright © 2011-2018 Bozhidar Batsov
 ;;
 ;; Author: Bozhidar Batsov <bozhidar@batsov.com>
 ;; URL: http://www.batsov.com/emacs-prelude
@@ -57,20 +57,16 @@
                                      (just-one-space)
                                      (save-excursion (insert " ")))
                                    "SPC" "=" "#")))
-  (sp-local-pair "<% "  " %>" :insert "C-c %")
-  (sp-local-pair "<%= " " %>" :insert "C-c =")
-  (sp-local-pair "<%# " " %>" :insert "C-c #")
   (sp-local-tag "%" "<% "  " %>")
   (sp-local-tag "=" "<%= " " %>")
   (sp-local-tag "#" "<%# " " %>"))
 
-(eval-after-load 'web-mode
-  '(progn
-     (defun prelude-web-mode-defaults ())
-     (setq prelude-web-mode-hook 'prelude-web-mode-defaults)
+(with-eval-after-load 'web-mode
+  (defun prelude-web-mode-defaults ())
+  (setq prelude-web-mode-hook 'prelude-web-mode-defaults)
 
-     (add-hook 'web-mode-hook (lambda ()
-                                (run-hooks 'prelude-web-mode-hook)))))
+  (add-hook 'web-mode-hook (lambda ()
+                             (run-hooks 'prelude-web-mode-hook))))
 
 (provide 'prelude-web)
 ;;; prelude-web.el ends here
