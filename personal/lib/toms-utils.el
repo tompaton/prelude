@@ -228,3 +228,34 @@ http://stackoverflow.com/a/15254151/3715
       (replace-regexp "\\([A-Z]\\)" "_\\1" nil
                       (1+ (car bounds)) (cdr bounds))
       (downcase-region (car bounds) (cdr bounds)))))
+
+
+(defun tom/truncate-log-file ()
+  "Delete all but the last 100 lines of the log file."
+  (interactive)
+  (if (s-ends-with? ".log" (buffer-file-name) t)
+      (progn
+        (revert-buffer t t t)
+        (end-of-buffer)
+        (forward-line -100)
+        (let ((end (point)))
+          (beginning-of-buffer)
+          (delete-region (point) end))
+        (save-buffer)
+        (revert-buffer t t t)
+        (end-of-buffer)
+        (move-beginning-of-line nil))
+    (message "Not visiting a .log file")))
+
+(require 'vc)
+(defvar tom/ediff-branch-history nil)
+(defun tom/ediff-branch (branch)
+  "wrapper for ediff-buffers and vc-revision-other-window"
+  (interactive (list (read-from-minibuffer
+                      "Branch: "
+                      (car tom/ediff-branch-history)
+                      nil nil 'tom/ediff-branch-history)))
+  (let* ((buffer (current-buffer))
+         (file (buffer-file-name buffer))
+         (rev-buffer (vc-find-revision file branch)))
+    (ediff-buffers buffer rev-buffer)))
