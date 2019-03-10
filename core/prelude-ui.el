@@ -75,8 +75,8 @@
   (load-theme prelude-theme t))
 
 ;; show the cursor when moving after big movements in the window
-;; (require 'beacon)
-;; (beacon-mode +1)
+(require 'beacon)
+(beacon-mode +1)
 
 ;; show available keybindings after you start typing
 (require 'which-key)

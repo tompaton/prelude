@@ -53,11 +53,9 @@
 (package-initialize)
 
 (defvar prelude-packages
-  '(;ace-jump-buffer
-    ;ace-jump-mode
-    ace-window
-    anzu
+  '(ace-window
     avy
+    anzu
     beacon
     browse-kill-ring
     crux

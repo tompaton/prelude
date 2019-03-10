@@ -1,2 +1,0 @@
-# --
-from pywin import debugger; debugger.brk()
